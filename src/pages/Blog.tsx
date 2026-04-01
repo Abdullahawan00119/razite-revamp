@@ -1,50 +1,161 @@
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ArrowRight, Calendar } from "lucide-react";
+import { ArrowRight, Calendar, Sparkles } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
+import { blogsAPI } from "@/lib/api";
 
-const posts = [
-  { slug: "digital-transformation-2025", title: "Digital Transformation Trends to Watch in 2025", excerpt: "Explore the key technology trends reshaping how businesses operate and compete in a rapidly evolving digital landscape.", date: "Mar 15, 2026", category: "Industry Insights" },
-  { slug: "data-driven-decisions", title: "How Data-Driven Decision Making Fuels Growth", excerpt: "Learn how organizations leverage analytics and BI tools to make smarter, faster, and more confident business decisions.", date: "Mar 8, 2026", category: "Data Analytics" },
-  { slug: "cloud-migration-guide", title: "A Practical Guide to Cloud Migration", excerpt: "Step-by-step best practices for migrating your legacy systems to the cloud without disrupting business operations.", date: "Feb 28, 2026", category: "Cloud Strategy" },
-  { slug: "ai-application-development", title: "Building AI-Powered Applications That Users Love", excerpt: "From ideation to deployment — how to design and build intelligent applications that solve real user problems.", date: "Feb 20, 2026", category: "App Development" },
-  { slug: "geospatial-technology", title: "The Rise of Geospatial Technology in Urban Planning", excerpt: "How GIS and remote sensing are transforming city planning, disaster management, and environmental monitoring.", date: "Feb 10, 2026", category: "Geo-Spatial" },
-  { slug: "cybersecurity-essentials", title: "Cybersecurity Essentials for Growing Businesses", excerpt: "A practical checklist of security measures every SME should implement to protect their digital assets.", date: "Jan 30, 2026", category: "Security" },
-];
+interface BlogPost {
+  _id: string;
+  slug: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  date: string;
+}
 
-const Blog = () => (
-  <section className="section-padding">
-    <div className="container">
-      <SectionHeading label="Blog" title="Insights & Updates" description="Thoughts, guides, and industry perspectives from the Razite team." />
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {posts.map((post, i) => (
-          <motion.article
-            key={post.slug}
+const fadeUp = {
+  hidden: { opacity: 0, y: 24 },
+  visible: (i: number) => ({ opacity: 1, y: 0, transition: { delay: i * 0.1, duration: 0.5 } }),
+};
+
+const Blog = () => {
+  const [posts, setPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setLoading(true);
+        const response = await blogsAPI.getAll({ status: 'published' });
+        const blogsData = (response.data as unknown as BlogPost[]) || [];
+        setPosts(blogsData);
+      } catch (error) {
+        console.error('Failed to load blogs:', error);
+        setPosts([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
+
+  return (
+    <>
+      {/* Hero Section */}
+      <section className="section-padding overflow-hidden relative">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-blue-500/10 to-cyan-500/5 rounded-full blur-3xl -z-10"></div>
+        <div className="absolute -bottom-20 left-0 w-96 h-96 bg-gradient-to-br from-primary/5 to-transparent rounded-full blur-3xl -z-10"></div>
+
+        <div className="container">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-2xl"
+          >
+            <span className="inline-block text-xs font-bold uppercase tracking-widest text-primary mb-4 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
+              Blog & Insights
+            </span>
+            <h1 className="text-5xl md:text-6xl font-bold tracking-tight leading-[1.1] mt-6">
+              Insights & <span className="text-gradient">Industry Perspectives</span>
+            </h1>
+            <p className="mt-8 text-lg text-muted-foreground leading-relaxed max-w-lg">
+              Thoughts, guides, and industry perspectives from the Razite team on technology, innovation, and digital transformation.
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Articles Grid */}
+      <section className="section-padding">
+        <div className="container">
+          {loading ? (
+            <div className="flex items-center justify-center h-96">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary mx-auto mb-4"></div>
+                <p className="text-muted-foreground">Loading blogs...</p>
+              </div>
+            </div>
+          ) : posts.length === 0 ? (
+            <div className="flex items-center justify-center h-96">
+              <div className="text-center">
+                <Sparkles className="h-12 w-12 text-muted-foreground mx-auto mb-4 opacity-50" />
+                <p className="text-muted-foreground">No blogs available yet.</p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              {posts.map((post, i) => (
+                <motion.article
+                  key={post._id}
+                  custom={i}
+                  initial="hidden"
+                  whileInView="visible"
+                  viewport={{ once: true }}
+                  variants={fadeUp}
+                  className="group"
+                >
+                  <Link to={`/blog/${post.slug}`} className="block h-full">
+                    <div className="h-full flex flex-col rounded-2xl border border-border/50 bg-card overflow-hidden hover:border-primary/30 transition-all duration-300 hover:shadow-lg">
+                      {/* Header Image */}
+                      <div className="h-40 bg-hero-gradient opacity-90 flex items-center justify-center p-6 group-hover:opacity-100 transition-opacity relative overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent"></div>
+                        <span className="text-xs font-bold text-primary-foreground/80 uppercase tracking-widest relative z-10">{post.category}</span>
+                      </div>
+
+                      {/* Content */}
+                      <div className="p-6 flex flex-col flex-1">
+                        <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-3">
+                          <Calendar className="h-3 w-3" />
+                          {new Date(post.date).toLocaleDateString()}
+                        </div>
+                        
+                        <h3 className="text-lg font-bold text-foreground mb-3 group-hover:text-primary transition-colors leading-snug line-clamp-2">
+                          {post.title}
+                        </h3>
+                        
+                        <p className="text-sm text-muted-foreground leading-relaxed mb-6 line-clamp-3 flex-1">
+                          {post.excerpt}
+                        </p>
+
+                        {/* Footer */}
+                        <div className="flex items-center gap-2 text-primary font-semibold text-sm group-hover:gap-3 transition-all">
+                          Read More <ArrowRight className="h-4 w-4" />
+                        </div>
+                      </div>
+                    </div>
+                  </Link>
+                </motion.article>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="section-padding bg-gradient-to-r from-primary/10 via-background to-primary/5 relative overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary/5 rounded-full blur-3xl"></div>
+
+        <div className="container relative z-10">
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            transition={{ delay: i * 0.08 }}
-            className="group rounded-xl border border-border bg-card overflow-hidden hover:shadow-lg transition-shadow"
+            className="flex items-center gap-4 p-8 rounded-2xl border border-primary/20 bg-gradient-to-r from-primary/5 to-transparent"
           >
-            <div className="h-36 bg-hero-gradient opacity-70 flex items-center justify-center">
-              <span className="text-xs font-semibold text-primary-foreground/80 uppercase tracking-widest">{post.category}</span>
+            <Sparkles className="h-8 w-8 text-primary flex-shrink-0" />
+            <div className="flex-1">
+              <h3 className="font-bold text-foreground mb-1">Stay Updated</h3>
+              <p className="text-sm text-muted-foreground">Subscribe to our newsletter for the latest insights and updates.</p>
             </div>
-            <div className="p-6">
-              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mb-2">
-                <Calendar className="h-3 w-3" />
-                {post.date}
-              </div>
-              <h3 className="font-semibold text-foreground mb-2 group-hover:text-primary transition-colors leading-snug">{post.title}</h3>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-4">{post.excerpt}</p>
-              <span className="text-sm font-medium text-primary inline-flex items-center gap-1">
-                Read More <ArrowRight className="h-3 w-3" />
-              </span>
-            </div>
-          </motion.article>
-        ))}
-      </div>
-    </div>
-  </section>
-);
+          </motion.div>
+        </div>
+      </section>
+    </>
+  );
+}
 
 export default Blog;
