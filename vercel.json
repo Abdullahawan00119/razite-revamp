@@ -1,0 +1,16 @@
+{
+  "buildCommand": "bun install && bun run build",
+  "devCommand": "bun run dev",
+  "installCommand": "bun install",
+  "framework": "vite",
+  "outputDirectory": "dist",
+  "public": true,
+  "regions": ["iad1"],
+  "env": [
+    {
+      "key": "VITE_API_URL",
+      "description": "Backend API URL for production",
+      "type": "secret"
+    }
+  ]
+}
