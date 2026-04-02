@@ -1,5 +1,21 @@
 // API Service for backend communication
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const getAPIBaseURL = (): string => {
+  // In development, default to localhost
+  if (import.meta.env.DEV) {
+    return import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+  }
+  
+  // In production, require VITE_API_URL to be set
+  const apiUrl = import.meta.env.VITE_API_URL;
+  if (!apiUrl) {
+    console.error('ERROR: VITE_API_URL environment variable is not set. Please set it in your Vercel environment variables.');
+    return '/api'; // Fallback won't work but prevents undefined
+  }
+  
+  return apiUrl;
+};
+
+const API_BASE_URL = getAPIBaseURL();
 
 interface ApiError {
   field?: string;
