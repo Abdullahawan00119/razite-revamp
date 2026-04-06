@@ -4,7 +4,7 @@ import { Mail, Phone, MapPin, Send, Clock, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
+import ContactForm from "@/components/ContactForm";
 
 const contactInfo = [
   {
@@ -41,18 +41,6 @@ const contactInfo = [
 ];
 
 const Contact = () => {
-  const { toast } = useToast();
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast({ title: "Message sent!", description: "We'll get back to you shortly." });
-      (e.target as HTMLFormElement).reset();
-    }, 1000);
-  };
 
   return (
     <>
@@ -124,43 +112,7 @@ const Contact = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
             >
-              <div className="mb-8">
-                <span className="inline-block text-xs font-bold uppercase tracking-widest text-primary mb-3 px-3 py-1.5 rounded-full bg-primary/10 border border-primary/20">
-                  Send a Message
-                </span>
-                <h2 className="text-3xl md:text-4xl font-bold tracking-tight mt-3">Start the Conversation</h2>
-                <p className="text-muted-foreground mt-3 leading-relaxed">Fill in the form and we'll get back to you within one business day.</p>
-              </div>
-
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Full Name *</label>
-                    <Input required placeholder="John Doe" />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Email *</label>
-                    <Input required type="email" placeholder="john@example.com" />
-                  </div>
-                </div>
-                <div className="grid sm:grid-cols-2 gap-5">
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Phone</label>
-                    <Input placeholder="+92 300 1234567" />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium text-foreground mb-1.5 block">Subject</label>
-                    <Input placeholder="Project Inquiry" />
-                  </div>
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-1.5 block">Message *</label>
-                  <Textarea required rows={5} placeholder="Tell us about your project..." />
-                </div>
-                <Button type="submit" size="lg" disabled={loading} className="w-full sm:w-auto font-semibold shadow-lg shadow-primary/20">
-                  {loading ? "Sending..." : "Send Message"} <Send className="ml-2 h-4 w-4" />
-                </Button>
-              </form>
+              <ContactForm />
             </motion.div>
 
             {/* Map + extra info */}

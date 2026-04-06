@@ -15,6 +15,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import ProjectCard from "@/components/ProjectCard";
 import BlogCard from "@/components/BlogCard";
+import ContactForm from "@/components/ContactForm";
 import { projectsAPI, blogsAPI } from "@/lib/api";
 
 
@@ -516,13 +517,31 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Final CTA */}
-      <section className="section-padding bg-muted/30">
-        <div className="container text-center">
-          <SectionHeading label="Let's Talk" title="Ready to Build Something Great?" description="Drop us a message and get expert guidance on your next big idea." />
-          <Button asChild size="lg">
-            <Link to="/contact">Contact Us <ArrowRight className="ml-2 h-4 w-4" /></Link>
-          </Button>
+      {/* Contact Form CTA */}
+      <section className="section-padding bg-gradient-to-b from-muted/50 via-white to-background">
+        <div className="container">
+          <div className="text-center mb-16 max-w-4xl mx-auto">
+            <SectionHeading 
+              label="Let's Talk" 
+              title="Ready to Build Something Great?" 
+              description="Drop us a message directly here and get expert guidance on your next big idea. We'll respond within one business day." 
+            />
+          </div>
+          <motion.div 
+            initial={{ opacity: 0, y: 30 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }}
+            className="max-w-2xl mx-auto"
+          >
+            <ContactForm />
+          </motion.div>
+          <p className="text-center mt-8 text-sm text-muted-foreground">
+            Or{" "}
+            <a href="/contact" className="font-medium hover:text-primary transition-colors">
+              visit our full contact page
+            </a>
+            .
+          </p>
         </div>
       </section>
     </>

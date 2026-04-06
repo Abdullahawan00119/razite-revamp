@@ -1,9 +1,18 @@
-# Task: Center Featured Projects Section (Case Studies) Horizontally in Index.tsx
+## Task: Add Contact Form to Home Page
 
-## Steps:
-1. [ ] Edit `src/pages/Index.tsx` to update the Featured Projects section wrapper and SectionHeading className for horizontal centering.
-2. [ ] Verify changes: Check responsive centering (full center on small screens, heading left/button right on md+).
-3. [ ] Test in browser: Run dev server, inspect home page section.
-4. [ ] Mark complete.
+### Approved Plan Summary
+1. Create reusable `src/components/ContactForm.tsx` (extract form logic from Contact.tsx, mock submission).
+2. Update `src/pages/Index.tsx`: Import and add ContactForm to "Final CTA" section (replace button with form section).
+3. Update `src/pages/Contact.tsx`: Replace inline form with imported ContactForm.
+4. Test form functionality and responsive design.
 
-Current progress: Starting step 1.
+### Steps to Complete (Step-by-Step Execution)
+- [x] Step 1: Create `src/components/ContactForm.tsx`
+- [x] Step 2: Update `src/pages/Index.tsx` to include ContactForm
+- [x] Step 3: Update `src/pages/Contact.tsx` to use ContactForm
+- [x] Step 4: Test locally (`npm run dev`), verify toasts/responsiveness
+- [x] Step 5: Complete task ✅
+
+**Task Completed: Contact form added to home page (Index.tsx Final CTA section) as reusable component. Form is functional with mock submission + toast feedback. Consistent with site design/responsiveness.**
+
+Run `npm run dev` to preview at http://localhost:5173
