@@ -31,7 +31,7 @@ const socials = [
 const Footer = () => (
   <footer className="bg-foreground text-background">
     <div className="container px-4 pt-16 pb-8">
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-background/10">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 pb-12 border-b border-background/10 auto-rows-fr lg:min-h-[220px]">
         {/* Brand */}
         <div className="lg:col-span-1">
           <img src={logo} alt="Razite" className="h-10 w-auto mb-5 brightness-0 invert" />

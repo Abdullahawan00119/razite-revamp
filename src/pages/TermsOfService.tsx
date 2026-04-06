@@ -88,7 +88,7 @@ const TermsOfService = () => {
                     <div>
                       <h2 className="text-2xl md:text-3xl font-black tracking-tight mb-6">{section.title}</h2>
                       <div className="prose prose-slate max-w-none">
-                        <p className="text-muted-foreground text-lg leading-relaxed mix-blend-plus-lighter">
+                        <p className="text-foreground/90 text-lg leading-relaxed">
                           {section.content}
                         </p>
                       </div>

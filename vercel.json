@@ -8,6 +8,12 @@
   "regions": ["iad1"],
   "env": {
     "VITE_API_URL": ""
-  }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
 }
 
