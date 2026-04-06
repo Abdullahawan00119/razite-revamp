@@ -1,0 +1,18 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagon background -->
+  <polygon points="100,20 170,55 170,125 100,160 30,125 30,55" fill="#E74C3C" stroke="#C0392B" stroke-width="2"/>
+  <!-- Inner hexagon -->
+  <polygon points="100,35 160,65 160,115 100,145 40,115 40,65" fill="#E8635C"/>
+  <!-- People silhouettes -->
+  <circle cx="70" cy="60" r="8" fill="white"/>
+  <path d="M 65 72 L 65 85 M 60 76 L 75 76" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="100" cy="60" r="8" fill="white"/>
+  <path d="M 95 72 L 95 85 M 90 76 L 105 76" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <circle cx="130" cy="60" r="8" fill="white"/>
+  <path d="M 125 72 L 125 85 M 120 76 L 135 76" stroke="white" stroke-width="2" stroke-linecap="round"/>
+  <!-- Heart -->
+  <path d="M 100 100 C 100 95 95 90 90 90 C 85 90 82 93 82 98 C 82 103 100 120 100 120 C 100 120 118 103 118 98 C 118 93 115 90 110 90 C 105 90 100 95 100 100 Z" fill="white"/>
+  <!-- Text -->
+  <text x="100" y="150" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">GREAT PLACE</text>
+  <text x="100" y="165" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">TO WORK</text>
+</svg>

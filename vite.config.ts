@@ -1,7 +1,6 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
+import react from "@vitejs/plugin-react";
 import path from "path";
-import { componentTagger } from "lovable-tagger";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
@@ -15,12 +14,7 @@ export default defineConfig(({ mode }) => ({
   build: {
     outDir: "dist",
     sourcemap: mode === "development",
-    minify: "terser",
-    terserOptions: {
-      compress: {
-        drop_console: mode === "production",
-      },
-    },
+    minify: "esbuild",
     rollupOptions: {
       output: {
         manualChunks: {
@@ -30,7 +24,11 @@ export default defineConfig(({ mode }) => ({
       },
     },
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  esbuild: {
+    drop: mode === "production" ? ["console", "debugger"] : [],
+  },
+  plugins: [react()],
+  optimizeDeps: {},
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

@@ -1,0 +1,20 @@
+<svg viewBox="0 0 200 240" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hexagon background -->
+  <polygon points="100,20 180,60 180,140 100,180 20,140 20,60" fill="#1a3a52" stroke="#5a7f99" stroke-width="3"/>
+  <!-- Inner white section top -->
+  <polygon points="100,35 170,70 170,90 100,55" fill="white"/>
+  <!-- Dark band -->
+  <rect x="30" y="90" width="140" height="60" fill="#1a3a52"/>
+  <!-- White section bottom -->
+  <polygon points="100,155 170,135 170,160 100,180" fill="white"/>
+  <!-- Text: TOP WEB DEVELOPERS -->
+  <text x="100" y="70" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#1a3a52">TOP WEB</text>
+  <text x="100" y="88" font-family="Arial, sans-serif" font-size="18" font-weight="bold" text-anchor="middle" fill="#1a3a52">DEVELOPERS</text>
+  <!-- Clutch logo -->
+  <text x="100" y="135" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="white">Clutch</text>
+  <!-- Red dot on Clutch -->
+  <circle cx="130" cy="120" r="4" fill="#e74c3c"/>
+  <!-- Text: RETAIL DUBAI -->
+  <text x="100" y="165" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a3a52">RETAIL</text>
+  <text x="100" y="180" font-family="Arial, sans-serif" font-size="14" font-weight="bold" text-anchor="middle" fill="#1a3a52">DUBAI</text>
+</svg>

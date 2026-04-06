@@ -1,0 +1,13 @@
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield shape background -->
+  <path d="M 100 20 L 170 50 L 170 110 C 170 145 100 180 100 180 C 100 180 30 145 30 110 L 30 50 Z" fill="#1a3a52" stroke="#5a7f99" stroke-width="2"/>
+  <!-- Inner shield -->
+  <path d="M 100 35 L 160 60 L 160 110 C 160 140 100 170 100 170 C 100 170 40 140 40 110 L 40 60 Z" fill="#2c5aa0"/>
+  <!-- Lock icon -->
+  <rect x="75" y="95" width="50" height="50" rx="5" fill="none" stroke="white" stroke-width="3"/>
+  <path d="M 85 95 L 85 75 C 85 65 92 58 100 58 C 108 58 115 65 115 75 L 115 95" fill="none" stroke="white" stroke-width="3"/>
+  <!-- Keyhole -->
+  <circle cx="100" cy="115" r="5" fill="white"/>
+  <!-- ISO 27001 text -->
+  <text x="100" y="165" font-family="Arial, sans-serif" font-size="12" font-weight="bold" text-anchor="middle" fill="white">ISO 27001</text>
+</svg>

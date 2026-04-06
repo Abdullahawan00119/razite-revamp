@@ -3,10 +3,11 @@ import { blogsAPI, projectsAPI, jobsAPI } from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
-import { 
-  AlertCircle, FileText, Code2, Briefcase, Zap, 
-  TrendingUp, BarChart3, Users, Settings,
-  ArrowUpRight, Edit3, Trash2
+import {
+  AlertCircle, FileText, Code2, Briefcase, Zap,
+  TrendingUp, BarChart3, Users, Settings, Inbox,
+  ArrowUpRight, Plus, Eye, CheckCircle,
+  Activity, Target, Sparkles
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -51,158 +52,173 @@ const AdminDashboard = () => {
   }, []);
 
   const statCards = [
-    { 
-      label: 'Total Blogs', 
-      value: stats.totalBlogs, 
+    {
+      label: 'Total Blogs',
+      value: stats.totalBlogs,
       icon: FileText,
-      bgGradient: 'from-blue-50 to-blue-100',
+      gradient: 'from-blue-500 to-blue-600',
+      lightGradient: 'from-blue-50 to-blue-100',
       borderColor: 'border-blue-200',
-      iconBg: 'bg-blue-100',
-      iconColor: 'text-blue-600',
+      textColor: 'text-blue-600',
+      iconBgColor: 'bg-blue-100',
       trend: '+12%',
-      trendPositive: true
+      trendPositive: true,
+      description: 'Total blog posts published'
     },
-    { 
-      label: 'Total Projects', 
-      value: stats.totalProjects, 
+    {
+      label: 'Projects',
+      value: stats.totalProjects,
       icon: Code2,
-      bgGradient: 'from-indigo-50 to-indigo-100',
-      borderColor: 'border-indigo-200',
-      iconBg: 'bg-indigo-100',
-      iconColor: 'text-indigo-600',
+      gradient: 'from-violet-500 to-violet-600',
+      lightGradient: 'from-violet-50 to-violet-100',
+      borderColor: 'border-violet-200',
+      textColor: 'text-violet-600',
+      iconBgColor: 'bg-violet-100',
       trend: '+8%',
-      trendPositive: true
+      trendPositive: true,
+      description: 'Portfolio projects'
     },
-    { 
-      label: 'Total Jobs', 
-      value: stats.totalJobs, 
+    {
+      label: 'Job Listings',
+      value: stats.totalJobs,
       icon: Briefcase,
-      bgGradient: 'from-cyan-50 to-cyan-100',
+      gradient: 'from-cyan-500 to-cyan-600',
+      lightGradient: 'from-cyan-50 to-cyan-100',
       borderColor: 'border-cyan-200',
-      iconBg: 'bg-cyan-100',
-      iconColor: 'text-cyan-600',
+      textColor: 'text-cyan-600',
+      iconBgColor: 'bg-cyan-100',
       trend: '+5%',
-      trendPositive: true
+      trendPositive: true,
+      description: 'Active job postings'
     },
-    { 
-      label: 'Open Positions', 
-      value: stats.openJobs, 
-      icon: Zap,
-      bgGradient: 'from-emerald-50 to-emerald-100',
+    {
+      label: 'Open Positions',
+      value: stats.openJobs,
+      icon: Target,
+      gradient: 'from-emerald-500 to-emerald-600',
+      lightGradient: 'from-emerald-50 to-emerald-100',
       borderColor: 'border-emerald-200',
-      iconBg: 'bg-emerald-100',
-      iconColor: 'text-emerald-600',
+      textColor: 'text-emerald-600',
+      iconBgColor: 'bg-emerald-100',
       trend: stats.openJobs > 0 ? 'Active' : 'None',
-      trendPositive: stats.openJobs > 0
+      trendPositive: stats.openJobs > 0,
+      description: 'Positions accepting applications'
     }
   ];
 
   const actionCards = [
     {
-      title: 'Manage Blogs',
-      description: 'Create, edit, and manage blog posts',
+      title: 'Blog Posts',
+      description: 'Create and manage your blog content',
       icon: FileText,
       link: '/admin/blogs',
-      color: 'from-blue-600 to-blue-700',
-      lightColor: 'from-blue-50 to-blue-100',
-      stats: `${stats.totalBlogs}`,
-      statsLabel: 'posts',
-      action: 'Manage Blogs'
+      gradient: 'from-blue-600 to-blue-700',
+      bgLight: 'from-blue-50 to-blue-100',
+      count: stats.totalBlogs,
+      ctaText: 'Manage Blogs',
+      color: 'blue'
     },
     {
-      title: 'Manage Projects',
-      description: 'Manage portfolio and projects',
+      title: 'Projects',
+      description: 'Showcase your portfolio and projects',
       icon: Code2,
       link: '/admin/projects',
-      color: 'from-indigo-600 to-indigo-700',
-      lightColor: 'from-indigo-50 to-indigo-100',
-      stats: `${stats.totalProjects}`,
-      statsLabel: 'projects',
-      action: 'Manage Projects'
+      gradient: 'from-violet-600 to-violet-700',
+      bgLight: 'from-violet-50 to-violet-100',
+      count: stats.totalProjects,
+      ctaText: 'Manage Projects',
+      color: 'violet'
     },
     {
-      title: 'Manage Jobs',
-      description: 'Post and manage job listings',
+      title: 'Job Postings',
+      description: 'Post and manage career opportunities',
       icon: Briefcase,
       link: '/admin/jobs',
-      color: 'from-cyan-600 to-cyan-700',
-      lightColor: 'from-cyan-50 to-cyan-100',
-      stats: `${stats.openJobs}`,
-      statsLabel: 'open',
-      action: 'Manage Jobs'
+      gradient: 'from-cyan-600 to-cyan-700',
+      bgLight: 'from-cyan-50 to-cyan-100',
+      count: stats.openJobs,
+      ctaText: 'Manage Jobs',
+      color: 'cyan'
     }
   ];
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-screen bg-slate-50">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-50 to-white">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
           <div className="relative w-20 h-20 mx-auto mb-6">
-            <div className="absolute inset-0 rounded-full border-4 border-blue-100"></div>
-            <div className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-600 border-r-blue-600 animate-spin"></div>
+            <div className="absolute inset-0 rounded-full border-4 border-slate-200"></div>
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'linear' }}
+              className="absolute inset-0 rounded-full border-4 border-transparent border-t-blue-600 border-r-blue-600"
+            ></motion.div>
           </div>
-          <p className="text-slate-700 font-semibold text-lg">Loading dashboard</p>
-          <p className="text-slate-500 text-sm mt-2">Please wait...</p>
+          <p className="text-slate-800 font-semibold text-lg">Loading your dashboard</p>
+          <p className="text-slate-500 text-sm mt-2">Fetching latest data...</p>
         </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      {/* Background Elements */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 w-96 h-96 bg-cyan-600/10 rounded-full blur-3xl"></div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+      {/* Decorative Background */}
+      <div className="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+        <div className="absolute top-20 left-1/2 w-96 h-96 bg-blue-200/20 rounded-full blur-3xl transform -translate-x-1/2"></div>
+        <div className="absolute bottom-0 right-0 w-96 h-96 bg-cyan-200/20 rounded-full blur-3xl"></div>
       </div>
 
-      {/* Main Content */}
       <div className="relative z-10">
-        {/* Header Section */}
+        {/* Header */}
         <motion.div
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
-          className="border-b border-slate-700/50 backdrop-blur-md bg-slate-900/50 sticky top-0 z-20"
+          className="sticky top-0 z-20 border-b border-slate-200/50 backdrop-blur-md bg-white/50"
         >
-          <div className="max-w-7xl mx-auto px-6 py-8">
+          <div className="max-w-7xl mx-auto px-6 py-6">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <div>
-                <h1 className="text-4xl font-bold text-white">Dashboard</h1>
-                <p className="text-slate-400 mt-2">Manage your content and monitor system performance</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex items-center gap-2 bg-slate-800/50 px-4 py-2 rounded-lg border border-slate-700">
-                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                  <span className="text-sm text-slate-300">System Online</span>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-8 h-8 text-blue-600" />
+                  <h1 className="text-3xl md:text-4xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent">
+                    Dashboard
+                  </h1>
                 </div>
-                <Button asChild variant="ghost" size="icon" className="text-slate-400 hover:text-white">
-                  <Link to="/admin-settings" title="Settings">
-                    <Settings className="w-5 h-5" />
-                  </Link>
-                </Button>
+                <p className="text-slate-600">Welcome back! Here's your content overview and quick actions</p>
               </div>
+              <Button
+                asChild
+                variant="outline"
+                size="icon"
+                className="border-slate-200 hover:bg-slate-50 w-10 h-10"
+              >
+                <Link to="/admin-settings" title="Settings">
+                  <Settings className="w-5 h-5 text-slate-600" />
+                </Link>
+              </Button>
             </div>
           </div>
         </motion.div>
 
-        {/* Content Area */}
-        <div className="max-w-7xl mx-auto px-6 py-8">
+        {/* Main Content */}
+        <div className="max-w-7xl mx-auto px-6 py-10">
           {/* Error Alert */}
           {error && (
             <motion.div
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
-              className="mb-8 bg-red-500/10 border border-red-500/30 backdrop-blur-sm rounded-xl p-4 flex items-start gap-3"
+              className="mb-8 bg-red-50 border border-red-200/50 rounded-2xl p-4 flex items-start gap-3"
             >
               <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
               <div>
-                <h3 className="font-semibold text-red-400">System Alert</h3>
-                <p className="text-sm text-red-300/80">{error}</p>
+                <h3 className="font-semibold text-red-900">Error</h3>
+                <p className="text-sm text-red-700/80">{error}</p>
               </div>
             </motion.div>
           )}
@@ -212,7 +228,7 @@ const AdminDashboard = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10"
           >
             {statCards.map((stat, index) => {
               const IconComponent = stat.icon;
@@ -221,27 +237,30 @@ const AdminDashboard = () => {
                   key={stat.label}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.08 }}
+                  transition={{ duration: 0.4, delay: index * 0.1 }}
                 >
-                  <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 hover:border-slate-600 transition-all duration-300 hover:shadow-xl hover:shadow-blue-500/10">
+                  <Card className={`border-l-4 ${stat.borderColor} border-r border-t border-b border-slate-200/50 bg-gradient-to-br ${stat.lightGradient} shadow-sm hover:shadow-lg hover:shadow-blue-200/50 transition-all duration-300 overflow-hidden group`}>
                     <CardContent className="p-6">
                       <div className="flex items-start justify-between mb-4">
-                        <div className={`p-3 rounded-lg ${stat.iconBg}`}>
-                          <IconComponent className={`w-6 h-6 ${stat.iconColor}`} />
+                        <div className={`p-3 rounded-xl ${stat.iconBgColor} group-hover:scale-110 transition-transform duration-300`}>
+                          <IconComponent className={`w-6 h-6 ${stat.textColor}`} />
                         </div>
-                        <div className="flex items-center gap-1 text-emerald-400">
-                          <ArrowUpRight className="w-4 h-4" />
-                          <span className="text-xs font-semibold">{stat.trend}</span>
-                        </div>
+                        {stat.trendPositive && (
+                          <motion.div
+                            animate={{ y: [0, -2, 0] }}
+                            transition={{ duration: 2, repeat: Infinity }}
+                            className="flex items-center gap-1 bg-emerald-100 px-2.5 py-1.5 rounded-full"
+                          >
+                            <ArrowUpRight className="w-3.5 h-3.5 text-emerald-600" />
+                            <span className="text-xs font-bold text-emerald-600">{stat.trend}</span>
+                          </motion.div>
+                        )}
                       </div>
-                      <p className="text-slate-400 font-medium text-sm mb-2">{stat.label}</p>
-                      <p className="text-3xl font-bold text-white">{stat.value}</p>
-                      <div className="mt-4 h-1 bg-slate-700 rounded-full overflow-hidden">
-                        <div 
-                          className={`h-full bg-gradient-to-r ${stat.iconBg}`}
-                          style={{ width: `${(stat.value / 100) * 100}%` }}
-                        ></div>
+                      <p className="text-slate-600 font-medium text-sm mb-1">{stat.label}</p>
+                      <div className="flex items-baseline gap-2 mb-2">
+                        <p className="text-4xl font-bold text-slate-900">{stat.value}</p>
                       </div>
+                      <p className="text-xs text-slate-500">{stat.description}</p>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -249,24 +268,29 @@ const AdminDashboard = () => {
             })}
           </motion.div>
 
-          {/* Main Content Grid */}
+          {/* Main Content Area */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-            {/* Quick Actions */}
+            {/* Quick Actions Section */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
+              transition={{ delay: 0.3 }}
               className="lg:col-span-2"
             >
-              <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 overflow-hidden">
-                <CardHeader className="bg-gradient-to-r from-blue-600 to-blue-700 border-b border-blue-600/50">
-                  <div className="flex items-center gap-2">
-                    <TrendingUp className="w-5 h-5" />
-                    <CardTitle className="text-white">Quick Actions</CardTitle>
+              <Card className="border-0 shadow-md bg-white overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-blue-600 to-cyan-600 text-white">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-white/20 rounded-xl">
+                      <Zap className="w-5 h-5" />
+                    </div>
+                    <div>
+                      <CardTitle>Quick Actions</CardTitle>
+                      <p className="text-sm text-blue-100 mt-1">Manage your content directly</p>
+                    </div>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6 pb-6 px-6">
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <CardContent className="p-8">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     {actionCards.map((action, index) => {
                       const IconComponent = action.icon;
                       return (
@@ -274,22 +298,32 @@ const AdminDashboard = () => {
                           key={action.title}
                           initial={{ opacity: 0, scale: 0.95 }}
                           animate={{ opacity: 1, scale: 1 }}
-                          transition={{ delay: 0.45 + index * 0.05 }}
+                          transition={{ delay: 0.35 + index * 0.08 }}
                         >
-                          <Link to={action.link}>
-                            <div className={`group bg-gradient-to-br ${action.lightColor} border border-slate-600 hover:border-slate-500 rounded-xl p-6 transition-all duration-300 cursor-pointer transform hover:scale-105 h-full flex flex-col`}>
-                              <div className={`w-12 h-12 rounded-lg bg-gradient-to-r ${action.color} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform shadow-lg`}>
-                                <IconComponent className="w-6 h-6 text-white" />
+                          <Link to={action.link} className="block">
+                            <div className={`group relative bg-gradient-to-br ${action.bgLight} border border-slate-200 rounded-2xl p-6 transition-all duration-300 hover:shadow-xl hover:shadow-blue-200/50 cursor-pointer h-full flex flex-col`}>
+                              {/* Hover Effect Background */}
+                              <div className={`absolute inset-0 bg-gradient-to-br ${action.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-300 rounded-2xl`}></div>
+
+                              <div className={`w-14 h-14 rounded-xl bg-gradient-to-r ${action.gradient} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-blue-200/50 relative z-10`}>
+                                <IconComponent className="w-7 h-7 text-white" />
                               </div>
-                              <h3 className="font-semibold text-slate-900 mb-1">
+
+                              <h3 className="font-bold text-slate-900 mb-1 text-lg relative z-10">
                                 {action.title}
                               </h3>
-                              <p className="text-xs text-slate-600 mb-4 flex-grow">{action.description}</p>
-                              <div className="flex items-center justify-between">
-                                <span className="text-2xl font-bold text-slate-900">
-                                  {action.stats}
-                                </span>
-                                <span className="text-xs text-slate-600">{action.statsLabel}</span>
+                              <p className="text-sm text-slate-600 mb-4 flex-grow relative z-10">
+                                {action.description}
+                              </p>
+
+                              <div className="flex items-center justify-between pt-4 border-t border-slate-200 relative z-10">
+                                <div>
+                                  <p className="text-2xl font-bold text-slate-900">
+                                    {action.count}
+                                  </p>
+                                  <p className="text-xs text-slate-500">items</p>
+                                </div>
+                                <ArrowUpRight className="w-5 h-5 text-slate-400 group-hover:text-slate-600 transition-colors" />
                               </div>
                             </div>
                           </Link>
@@ -301,49 +335,65 @@ const AdminDashboard = () => {
               </Card>
             </motion.div>
 
-            {/* System Status Card */}
+            {/* System Info Card */}
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+              transition={{ delay: 0.4 }}
             >
-              <Card className="bg-gradient-to-br from-slate-800 to-slate-900 border-slate-700 overflow-hidden h-full flex flex-col">
-                <CardHeader className="bg-gradient-to-r from-slate-700 to-slate-800 border-b border-slate-700">
+              <Card className="border-0 shadow-md bg-white overflow-hidden h-full flex flex-col">
+                <CardHeader className="bg-gradient-to-br from-emerald-500 to-teal-600 text-white">
                   <div className="flex items-center gap-2">
-                    <BarChart3 className="w-5 h-5 text-white" />
-                    <CardTitle className="text-white">System Status</CardTitle>
+                    <Activity className="w-5 h-5" />
+                    <CardTitle>System Status</CardTitle>
                   </div>
                 </CardHeader>
-                <CardContent className="pt-6 flex-grow flex flex-col justify-between">
-                  <div className="space-y-3 mb-4">
-                    <div className="flex items-center justify-between p-3 bg-emerald-500/10 border border-emerald-500/30 rounded-lg">
-                      <span className="text-sm font-medium text-slate-300">API Status</span>
+                <CardContent className="p-6 flex-grow flex flex-col justify-between">
+                  <div className="space-y-4 mb-6">
+                    <motion.div
+                      animate={{ scale: [1, 1.02, 1] }}
+                      transition={{ duration: 2, repeat: Infinity }}
+                      className="flex items-center justify-between p-4 bg-emerald-50 border border-emerald-200 rounded-xl"
+                    >
+                      <span className="text-sm font-semibold text-slate-700">API Status</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></div>
-                        <span className="text-xs font-semibold text-emerald-400">Connected</span>
+                        <motion.div
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 2, repeat: Infinity }}
+                          className="w-2 h-2 rounded-full bg-emerald-500"
+                        ></motion.div>
+                        <span className="text-xs font-bold text-emerald-600">Connected</span>
                       </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="flex items-center justify-between p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg">
-                      <span className="text-sm font-medium text-slate-300">Database</span>
+                    <motion.div
+                      animate={{ scale: [1, 1.02, 1] }}
+                      transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+                      className="flex items-center justify-between p-4 bg-blue-50 border border-blue-200 rounded-xl"
+                    >
+                      <span className="text-sm font-semibold text-slate-700">Database</span>
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></div>
-                        <span className="text-xs font-semibold text-blue-400">Synced</span>
+                        <motion.div
+                          animate={{ scale: [1, 1.2, 1] }}
+                          transition={{ duration: 2, repeat: Infinity, delay: 0.3 }}
+                          className="w-2 h-2 rounded-full bg-blue-500"
+                        ></motion.div>
+                        <span className="text-xs font-bold text-blue-600">Synced</span>
                       </div>
-                    </div>
+                    </motion.div>
                   </div>
 
-                  <div className="p-3 bg-slate-900/50 border border-slate-700 rounded-lg mb-4">
-                    <p className="text-xs text-slate-500 mb-2 font-semibold">API ENDPOINT</p>
-                    <code className="text-xs text-slate-300 break-words font-mono">
+                  <div className="p-4 bg-slate-50 border border-slate-200 rounded-xl mb-6">
+                    <p className="text-xs text-slate-500 mb-2 font-bold uppercase tracking-wide">API Endpoint</p>
+                    <code className="text-xs text-slate-700 break-words font-mono font-semibold">
                       {import.meta.env.VITE_API_URL || 'http://localhost:5000/api'}
                     </code>
                   </div>
 
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-semibold" asChild>
+                  <Button className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300" asChild>
                     <Link to="/admin/blogs" className="flex items-center justify-center gap-2">
-                      <FileText className="w-4 h-4" />
-                      Start Managing
+                      <Plus className="w-4 h-4" />
+                      Add New Content
                     </Link>
                   </Button>
                 </CardContent>
@@ -351,7 +401,47 @@ const AdminDashboard = () => {
             </motion.div>
           </div>
 
+          {/* Welcome Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+            className="bg-gradient-to-r from-blue-600 via-cyan-600 to-emerald-600 rounded-3xl p-8 md:p-12 text-white shadow-lg overflow-hidden relative"
+          >
+            <div className="absolute inset-0 opacity-10">
+              <svg className="w-full h-full" viewBox="0 0 400 200" preserveAspectRatio="none">
+                <defs>
+                  <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <path d="M 40 0 L 0 0 0 40" fill="none" stroke="white" strokeWidth="0.5" />
+                  </pattern>
+                </defs>
+                <rect width="400" height="200" fill="url(#grid)" />
+              </svg>
+            </div>
 
+            <div className="relative z-10 max-w-2xl">
+              <h2 className="text-3xl md:text-4xl font-bold mb-3">
+                Ready to manage your content?
+              </h2>
+              <p className="text-blue-100 text-lg mb-6">
+                All your content management tools are here. Create blog posts, showcase projects, and manage job postings in one place.
+              </p>
+              <div className="flex flex-wrap gap-3">
+                <Button asChild className="bg-white text-blue-600 hover:bg-blue-50 font-semibold">
+                  <Link to="/admin/blogs" className="flex items-center gap-2">
+                    <FileText className="w-4 h-4" />
+                    Create Blog Post
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" className="border-white text-white hover:bg-white/20 font-semibold">
+                  <Link to="/admin/projects" className="flex items-center gap-2">
+                    <Code2 className="w-4 h-4" />
+                    Add Project
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </motion.div>
         </div>
       </div>
     </div>
