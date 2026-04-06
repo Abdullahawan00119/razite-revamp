@@ -12,9 +12,11 @@ import {
   CarouselPrevious,
   CarouselNext,
 } from "@/components/ui/carousel";
+import { Skeleton } from "@/components/ui/skeleton";
 import ProjectCard from "@/components/ProjectCard";
 import BlogCard from "@/components/BlogCard";
 import { projectsAPI, blogsAPI } from "@/lib/api";
+
 
 interface Project {
   _id: string;
@@ -33,6 +35,60 @@ interface BlogPost {
   category: string;
   date: string;
 }
+
+const mockProjects: Project[] = [
+  {
+    _id: "mock1",
+    title: "AI-Powered Analytics Platform",
+    description: "End-to-end data processing and visualization dashboard for enterprise insights.",
+    projectType: "Web App",
+    technologies: ["React", "Node.js", "PostgreSQL", "AI/ML"],
+    slug: "ai-analytics-platform"
+  },
+  {
+    _id: "mock2",
+    title: "Cloud Migration Accelerator",
+    description: "Automated multi-cloud migration tool reducing deployment time by 70%.",
+    projectType: "DevOps Tool",
+    technologies: ["AWS", "Terraform", "Kubernetes", "Python"],
+    slug: "cloud-migration"
+  },
+  {
+    _id: "mock3",
+    title: "Real-time Geo-Spatial Dashboard",
+    description: "Interactive GIS platform for satellite imagery and terrain analysis.",
+    projectType: "Data Visualization",
+    technologies: ["React", "Mapbox", "PostGIS", "FastAPI"],
+    slug: "geo-spatial-dashboard"
+  }
+];
+
+const mockBlogs: BlogPost[] = [
+  {
+    _id: "mock-blog1",
+    slug: "future-of-cloud-native-development",
+    title: "The Future of Cloud Native Development",
+    excerpt: "Exploring Kubernetes operators, service meshes, and the next wave of container orchestration.",
+    category: "DevOps",
+    date: "2024-10-15"
+  },
+  {
+    _id: "mock-blog2",
+    slug: "building-ai-first-applications",
+    title: "Building AI-First Applications",
+    excerpt: "Architectural patterns for integrating LLMs and embedding models into production systems.",
+    category: "AI/ML",
+    date: "2024-10-10"
+  },
+  {
+    _id: "mock-blog3",
+    slug: "data-warehousing-best-practices-2024",
+    title: "Data Warehousing Best Practices in 2024",
+    excerpt: "Modern ETL pipelines, columnar storage, and cost-optimized analytics architectures.",
+    category: "Data Engineering",
+    date: "2024-10-05"
+  }
+];
 
 const services = [
   { icon: Shield, title: "IT Consultancy", desc: "Cloud strategy, cybersecurity, and digital transformation guidance." },
@@ -108,9 +164,11 @@ const fadeUp = {
 
 const Index = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [featuredProjects, setFeaturedProjects] = useState<Project[]>([]);
-  const [latestBlogs, setLatestBlogs] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [featuredProjects, setFeaturedProjects] = useState<Project[]>(mockProjects);
+  const [latestBlogs, setLatestBlogs] = useState<BlogPost[]>(mockBlogs);
+  // Global loading deprecated, using specific loading states
+  const [projectsLoading, setProjectsLoading] = useState(false);
+  const [blogsLoading, setBlogsLoading] = useState(false);
   const carouselApiRef = useRef<CarouselApi | null>(null);
 
   const handleSelect = useCallback((api: CarouselApi) => {
@@ -120,18 +178,25 @@ const Index = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        setLoading(true);
+        setProjectsLoading(true);
+        setBlogsLoading(true);
         const [projectsRes, blogsRes] = await Promise.all([
           projectsAPI.getAll({ featured: true }),
           blogsAPI.getAll({ status: 'published' })
         ]);
         
-        setFeaturedProjects(((projectsRes.data as unknown as Project[]) || []).slice(0, 3));
-        setLatestBlogs(((blogsRes.data as unknown as BlogPost[]) || []).slice(0, 3));
+        const projData = ((projectsRes.data as unknown as Project[]) || []).slice(0, 3);
+        const blogData = ((blogsRes.data as unknown as BlogPost[]) || []).slice(0, 3);
+        
+        setFeaturedProjects(projData.length > 0 ? projData : mockProjects);
+        setLatestBlogs(blogData.length > 0 ? blogData : mockBlogs);
       } catch (error) {
         console.error("Failed to fetch home page data:", error);
+        setFeaturedProjects(mockProjects);
+        setLatestBlogs(mockBlogs);
       } finally {
-        setLoading(false);
+        setProjectsLoading(false);
+        setBlogsLoading(false);
       }
     };
     fetchData();
@@ -157,7 +222,7 @@ const Index = () => {
             {heroSlides.map((slide, index) => (
               <CarouselItem key={index} className="basis-full">
                 <div 
-                  className={`h-[70vh] md:h-screen bg-cover bg-center relative ${slide.bgClass}`}
+className={`h-[70vh] md:h-screen bg-cover bg-center bg-[url('/assets/hero-B9KM3qm4.svg')] bg-no-repeat bg-center relative ${slide.bgClass}`}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/80" />
                   <div className="container relative z-10 h-full flex items-center">
@@ -229,8 +294,7 @@ const Index = () => {
       </section>
 
       {/* Featured Projects */}
-      {featuredProjects.length > 0 && (
-        <section className="section-padding bg-muted/20">
+<section className="section-padding bg-muted/20">
           <div className="container">
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
               <SectionHeading 
@@ -245,9 +309,15 @@ const Index = () => {
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {featuredProjects.map((project, i) => (
-                <ProjectCard key={project._id} project={project} index={i} />
-              ))}
+              {projectsLoading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-80 w-full rounded-xl" />
+                ))
+              ) : (
+                featuredProjects.map((project, i) => (
+                  <ProjectCard key={project._id} project={project} index={i} />
+                ))
+              )}
             </div>
             
             <div className="mt-12 text-center md:hidden">
@@ -257,7 +327,6 @@ const Index = () => {
             </div>
           </div>
         </section>
-      )}
 
       {/* CTA */}
       <section className="section-padding bg-hero-gradient text-primary-foreground">
@@ -407,8 +476,7 @@ const Index = () => {
       </section>
 
       {/* Latest News / Blog Section - Repositioned & Enhanced */}
-      {latestBlogs.length > 0 && (
-        <section className="section-padding overflow-hidden relative bg-gradient-to-b from-transparent via-muted/40 to-transparent">
+<section className="section-padding overflow-hidden relative bg-gradient-to-b from-transparent via-muted/40 to-transparent">
           {/* Decorative Background Text */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none opacity-[0.03] text-[20vw] font-black tracking-tighter text-foreground whitespace-nowrap leading-none z-0">
             INSIGHTS
@@ -425,9 +493,15 @@ const Index = () => {
             </div>
             
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              {latestBlogs.map((post, i) => (
-                <BlogCard key={post._id} post={post} index={i} />
-              ))}
+              {blogsLoading ? (
+                Array.from({ length: 3 }).map((_, i) => (
+                  <Skeleton key={i} className="h-[400px] w-full rounded-2xl" />
+                ))
+              ) : (
+                latestBlogs.map((post, i) => (
+                  <BlogCard key={post._id} post={post} index={i} />
+                ))
+              )}
             </div>
             
             <div className="text-center group">
@@ -440,7 +514,6 @@ const Index = () => {
             </div>
           </div>
         </section>
-      )}
 
       {/* Final CTA */}
       <section className="section-padding bg-muted/30">
