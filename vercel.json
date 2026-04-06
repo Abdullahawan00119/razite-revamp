@@ -6,11 +6,11 @@
   "outputDirectory": "dist",
   "public": true,
   "regions": ["iad1"],
-  "env": [
-    {
-      "key": "VITE_API_URL",
+  "env": {
+    "VITE_API_URL": {
       "description": "Backend API URL for production",
       "type": "secret"
     }
-  ]
+  }
 }
+
