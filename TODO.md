@@ -1,11 +1,9 @@
-# Task Complete: Fixed Vite Syntax Error in Index.tsx ✅
+# Task: Center Featured Projects Section (Case Studies) Horizontally in Index.tsx
 
-## Summary
-- Fixed syntax error in `mockBlogs` array (line ~90): Replaced invalid semicolon with proper array closing
-- Removed unused `setLoading(false)` reference causing TS error
-- File now parses correctly; Vite server should reload without 500 errors
+## Steps:
+1. [ ] Edit `src/pages/Index.tsx` to update the Featured Projects section wrapper and SectionHeading className for horizontal centering.
+2. [ ] Verify changes: Check responsive centering (full center on small screens, heading left/button right on md+).
+3. [ ] Test in browser: Run dev server, inspect home page section.
+4. [ ] Mark complete.
 
-**Test**: Homepage should now load at http://localhost:5173 without parser errors.
-
-All steps completed.
-
+Current progress: Starting step 1.

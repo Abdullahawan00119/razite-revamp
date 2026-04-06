@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import { Mail, Phone, MapPin, ArrowRight, Linkedin, Twitter, Github, Facebook } from "lucide-react";
-import logo from "@/assets/razite-logo.jpeg";
+import logo from "@/assets/razite-logo.jpeg.png";
 
 const footerLinks = {
   company: [
@@ -24,8 +24,8 @@ const footerLinks = {
 const socials = [
   { icon: Linkedin, href: "https://linkedin.com/company/razite", label: "LinkedIn" },
   { icon: Twitter, href: "https://twitter.com/razite", label: "Twitter" },
-  { icon: Github, href: "https://github.com/razite", label: "GitHub" },
   { icon: Facebook, href: "https://facebook.com/razite", label: "Facebook" },
+  // { icon: Instagram , href: "https://facebook.com/razite", label: "Instagram" },
 ];
 
 const Footer = () => (

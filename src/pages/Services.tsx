@@ -29,7 +29,7 @@ const fadeUp = {
 const Services = () => (
   <>
     {/* Hero Section */}
-    <section className="relative min-h-[80vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[50vh] flex items-center overflow-hidden">
       {/* Layered ambient gradients (About page style) */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-primary/12 via-blue-500/6 to-transparent rounded-full blur-3xl" />
@@ -37,9 +37,9 @@ const Services = () => (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gradient-to-br from-cyan-500/5 to-transparent rounded-full blur-3xl opacity-60" />
       </div>
 
-      <div className="container relative z-10 py-16 md:py-24 lg:py-32">
+      <div className="container relative z-10 pt-16 pb-12 md:pb-16 lg:pb-20">
         {/* Watermark background title */}
-        <div className="absolute top-[35%] left-0 -z-10 select-none opacity-[0.02] pointer-events-none hidden lg:block">
+        <div className="absolute top-[25%] left-0 -z-10 select-none opacity-[0.02] pointer-events-none hidden lg:block">
           <h1 className="text-[18rem] font-black uppercase tracking-tighter leading-none whitespace-nowrap">
             SOLUTIONS
           </h1>
@@ -56,7 +56,7 @@ const Services = () => (
               <Sparkles className="h-4 w-4" /> Comprehensive Offerings
             </span>
             
-            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-[0.95] mt-4">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-[0.95] mt-2">
               Enterprise-Grade <br className="hidden sm:block" /> 
               <span className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-primary via-blue-400 to-indigo-500">Tech Solutions</span>
             </h1>

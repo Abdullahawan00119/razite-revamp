@@ -184,10 +184,10 @@ const Index = () => {
           projectsAPI.getAll({ featured: true }),
           blogsAPI.getAll({ status: 'published' })
         ]);
-        
+
         const projData = ((projectsRes.data as unknown as Project[]) || []).slice(0, 3);
         const blogData = ((blogsRes.data as unknown as BlogPost[]) || []).slice(0, 3);
-        
+
         setFeaturedProjects(projData.length > 0 ? projData : mockProjects);
         setLatestBlogs(blogData.length > 0 ? blogData : mockBlogs);
       } catch (error) {
@@ -221,14 +221,14 @@ const Index = () => {
           <CarouselContent>
             {heroSlides.map((slide, index) => (
               <CarouselItem key={index} className="basis-full">
-                <div 
-className={`h-[70vh] md:h-screen bg-cover bg-center bg-[url('/assets/hero-B9KM3qm4.svg')] bg-no-repeat bg-center relative ${slide.bgClass}`}
+                <div
+                  className={`h-[70vh] md:h-screen bg-cover bg-center bg-[url('/assets/hero-B9KM3qm4.svg')] bg-no-repeat bg-center relative ${slide.bgClass}`}
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/60 to-black/80" />
                   <div className="container relative z-10 h-full flex items-center">
-                    <motion.div 
-                      initial={{ opacity: 0, x: -50 }} 
-                      animate={{ opacity: 1, x: 0 }} 
+                    <motion.div
+                      initial={{ opacity: 0, x: -50 }}
+                      animate={{ opacity: 1, x: 0 }}
                       transition={{ duration: 0.8, delay: 0.3 }}
                       className="max-w-2xl"
                     >
@@ -294,39 +294,40 @@ className={`h-[70vh] md:h-screen bg-cover bg-center bg-[url('/assets/hero-B9KM3q
       </section>
 
       {/* Featured Projects */}
-<section className="section-padding bg-muted/20">
-          <div className="container">
-            <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-              <SectionHeading 
-                label="Case Studies" 
-                title="Featured Projects" 
-                description="Selected work that demonstrates our technical excellence and creative problem solving."
-                className="mb-0 text-left items-start"
-              />
-              <Button asChild variant="outline" className="hidden md:flex">
-                <Link to="/projects">View All Projects <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projectsLoading ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                  <Skeleton key={i} className="h-80 w-full rounded-xl" />
-                ))
-              ) : (
-                featuredProjects.map((project, i) => (
-                  <ProjectCard key={project._id} project={project} index={i} />
-                ))
-              )}
-            </div>
-            
-            <div className="mt-12 text-center md:hidden">
-              <Button asChild variant="outline" size="lg" className="w-full">
-                <Link to="/projects">View All Projects <ArrowRight className="ml-2 h-4 w-4" /></Link>
-              </Button>
-            </div>
+      <section className="section-padding bg-muted/20">
+        <div className="container">
+          <div className="flex flex-col md:flex-row md:items-end justify-center md:justify-between gap-6 mb-12">
+            <SectionHeading
+              label="Case Studies"
+              title="Featured Projects"
+              description="Selected work that demonstrates our technical excellence and creative problem solving."
+              center={true}
+              className="mb-0 flex-1 md:text-left max-w-md"
+            />
+            <Button asChild variant="outline" className="hidden md:flex">
+              <Link to="/projects">View All Projects <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
           </div>
-        </section>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {projectsLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-80 w-full rounded-xl" />
+              ))
+            ) : (
+              featuredProjects.map((project, i) => (
+                <ProjectCard key={project._id} project={project} index={i} />
+              ))
+            )}
+          </div>
+
+          <div className="mt-12 text-center md:hidden">
+            <Button asChild variant="outline" size="lg" className="w-full">
+              <Link to="/projects">View All Projects <ArrowRight className="ml-2 h-4 w-4" /></Link>
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* CTA */}
       <section className="section-padding bg-hero-gradient text-primary-foreground">
@@ -442,10 +443,10 @@ className={`h-[70vh] md:h-screen bg-cover bg-center bg-[url('/assets/hero-B9KM3q
       {/* Our Partnerships */}
       <section className="pt-16 pb-20 md:pt-24 md:pb-28 px-4 bg-gradient-to-b from-muted/50 to-background">
         <div className="container">
-          <SectionHeading 
-            label="Partnerships" 
-            title="Our Partnerships" 
-            description="Collaborating with industry leaders to deliver world-class technology solutions and innovation." 
+          <SectionHeading
+            label="Partnerships"
+            title="Our Partnerships"
+            description="Collaborating with industry leaders to deliver world-class technology solutions and innovation."
           />
           <Carousel opts={{ align: "start", loop: false }}>
             <CarouselContent className="-ml-4 [&>div]:pl-4">
@@ -476,44 +477,44 @@ className={`h-[70vh] md:h-screen bg-cover bg-center bg-[url('/assets/hero-B9KM3q
       </section>
 
       {/* Latest News / Blog Section - Repositioned & Enhanced */}
-<section className="section-padding overflow-hidden relative bg-gradient-to-b from-transparent via-muted/40 to-transparent">
-          {/* Decorative Background Text */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none opacity-[0.03] text-[20vw] font-black tracking-tighter text-foreground whitespace-nowrap leading-none z-0">
-            INSIGHTS
+      <section className="section-padding overflow-hidden relative bg-gradient-to-b from-transparent via-muted/40 to-transparent">
+        {/* Decorative Background Text */}
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 select-none pointer-events-none opacity-[0.03] text-[20vw] font-black tracking-tighter text-foreground whitespace-nowrap leading-none z-0">
+          INSIGHTS
+        </div>
+
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto text-center mb-16 px-4">
+            <SectionHeading
+              label="Explore Our Thinking"
+              title="Latest from the Blog"
+              description="Expert perspectives on digital transformation, technology trends, and industry-leading innovation."
+              center={true}
+            />
           </div>
 
-          <div className="container relative z-10">
-            <div className="max-w-4xl mx-auto text-center mb-16 px-4">
-              <SectionHeading 
-                label="Explore Our Thinking" 
-                title="Latest from the Blog" 
-                description="Expert perspectives on digital transformation, technology trends, and industry-leading innovation."
-                center={true}
-              />
-            </div>
-            
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-              {blogsLoading ? (
-                Array.from({ length: 3 }).map((_, i) => (
-                  <Skeleton key={i} className="h-[400px] w-full rounded-2xl" />
-                ))
-              ) : (
-                latestBlogs.map((post, i) => (
-                  <BlogCard key={post._id} post={post} index={i} />
-                ))
-              )}
-            </div>
-            
-            <div className="text-center group">
-              <Button asChild variant="outline" size="lg" className="rounded-full px-10 hover:bg-primary hover:text-white transition-all duration-500 shadow-xl shadow-primary/5">
-                <Link to="/blog" className="flex items-center gap-3">
-                  View All Insights 
-                  <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Link>
-              </Button>
-            </div>
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
+            {blogsLoading ? (
+              Array.from({ length: 3 }).map((_, i) => (
+                <Skeleton key={i} className="h-[400px] w-full rounded-2xl" />
+              ))
+            ) : (
+              latestBlogs.map((post, i) => (
+                <BlogCard key={post._id} post={post} index={i} />
+              ))
+            )}
           </div>
-        </section>
+
+          <div className="text-center group">
+            <Button asChild variant="outline" size="lg" className="rounded-full px-10 hover:bg-primary hover:text-white transition-all duration-500 shadow-xl shadow-primary/5">
+              <Link to="/blog" className="flex items-center gap-3">
+                View All Insights
+                <ArrowRight className="h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              </Link>
+            </Button>
+          </div>
+        </div>
+      </section>
 
       {/* Final CTA */}
       <section className="section-padding bg-muted/30">

@@ -45,14 +45,14 @@ const Blog = () => {
   return (
     <>
       {/* Hero Section */}
-      <section className="relative min-h-[60vh] flex items-center overflow-hidden">
+      <section className="relative min-h-[50vh] flex items-center overflow-hidden">
         {/* Layered ambient gradients (About page style) */}
         <div className="absolute inset-0 -z-10">
           <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-blue-500/12 via-cyan-500/6 to-transparent rounded-full blur-3xl" />
           <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-primary/8 to-transparent rounded-full blur-3xl" />
         </div>
 
-        <div className="container relative z-10 py-16 md:py-24 lg:py-32">
+        <div className="container relative z-10 pt-16 pb-16 md:pb-24 lg:pb-32">
           {/* Watermark background title */}
           <div className="absolute top-[35%] left-0 -z-10 select-none opacity-[0.02] pointer-events-none hidden lg:block">
             <h1 className="text-[18rem] font-black uppercase tracking-tighter leading-none whitespace-nowrap">

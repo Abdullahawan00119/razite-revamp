@@ -40,6 +40,15 @@ const team = [
     initial: "KA",
     badge: "Strategy",
   },
+  {
+    name: "Abdullah",
+    role: "Software Eng.",
+    bio: "Solve the problems through Tech solutions .",
+    color: "from-emerald-500 to-teal-500",
+    shadowColor: "shadow-emerald-500/25",
+    initial: "A",
+    badge: "Develop",
+  },
 ];
 
 const values = [
@@ -131,7 +140,7 @@ function AnimatedCounter({ value, suffix }: { value: number; suffix: string }) {
 const About = () => (
   <>
     {/* ─── HERO ─────────────────────────────────────────────────────────── */}
-    <section className="relative min-h-[85vh] flex items-center overflow-hidden">
+    <section className="relative min-h-[50vh] flex items-center overflow-hidden">
       {/* Layered ambient gradients */}
       <div className="absolute inset-0 -z-10">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-bl from-blue-500/12 via-cyan-500/6 to-transparent rounded-full blur-3xl" />
@@ -139,7 +148,7 @@ const About = () => (
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-gradient-to-br from-primary/5 to-transparent rounded-full blur-3xl" />
       </div>
 
-      <div className="container py-24">
+        <div className="container relative z-10 pt-16 pb-12 md:pb-16 lg:pb-20">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           {/* Left – text */}
           <motion.div initial="hidden" animate="visible" variants={fadeLeft}>
@@ -152,7 +161,7 @@ const About = () => (
               <Sparkles className="h-3 w-3" /> About Razite
             </motion.span>
 
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-[1.08] mt-4">
+            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black tracking-tighter leading-[1.08] mt-2">
               Bridging{" "}
               <span className="text-gradient">Ideas</span>{" "}
               <br className="hidden sm:block" />to{" "}
@@ -311,7 +320,7 @@ const About = () => (
             className="lg:col-span-7 space-y-10"
           >
             <div>
-              <motion.span 
+              <motion.span
                 initial={{ opacity: 0, x: -10 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 className="inline-block text-xs font-bold uppercase tracking-widest text-primary mb-4"
@@ -398,7 +407,7 @@ const About = () => (
                   <p className="font-bold text-foreground text-sm">{item.label}</p>
                 </div>
               ))}
-              
+
               <div className="col-span-2 p-6 rounded-3xl border border-violet-500/20 bg-violet-500/5 flex items-center justify-between group hover:border-violet-500/40 transition-all">
                 <div className="flex items-center gap-4">
                   <div className="h-12 w-12 rounded-2xl bg-violet-500/20 flex items-center justify-center text-2xl group-hover:rotate-12 transition-transform">🏢</div>
@@ -694,8 +703,8 @@ const About = () => (
             <Button
               asChild
               size="lg"
-              variant="outline"
-              className="font-semibold border-primary-foreground/25 hover:border-primary-foreground text-primary-foreground hover:text-primary-foreground hover:bg-white/10"
+              variant="secondary"
+              className="font-semibold border-primary-foreground/25 hover:border-primary-foreground"
             >
               <Link to="/services">View Services</Link>
             </Button>
