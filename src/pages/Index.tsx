@@ -182,7 +182,7 @@ const Index = () => {
                             {slide.primaryBtn} <ArrowRight className="ml-2 h-4 w-4" />
                           </Link>
                         </Button>
-                        <Button asChild size="lg" className="bg-black text-white hover:bg-gray-900 border border-transparent shadow-lg hover:shadow-xl backdrop-blur-sm">
+                        <Button asChild size="lg" className="bg-bg-gray-900 text-white  border border-transparent shadow-lg hover:shadow-xl backdrop-blur-sm">
                           <Link to="/services">{slide.secondaryBtn}</Link>
                         </Button>
                       </div>
