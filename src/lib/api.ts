@@ -59,91 +59,63 @@ const handleResponse = async (response: Response): Promise<ApiResponse<Record<st
   return response.json();
 };
 
-// Blogs API
-export const blogsAPI = {
-  getAll: async (filters?: { status?: string; category?: string; featured?: boolean }): Promise<ApiResponse<Record<string, unknown>[]>> => {
-    const params = new URLSearchParams();
-    if (filters?.status) params.append('status', filters.status);
-    if (filters?.category) params.append('category', filters.category);
-    if (filters?.featured) params.append('featured', 'true');
+// Static data APIs for projects and blogs (hardcoded)
 
-    const response = await fetch(`${API_BASE_URL}/blogs${params.toString() ? '?' + params : ''}`);
-    return handleResponse(response) as unknown as Promise<ApiResponse<Record<string, unknown>[]>>;
+// Import static data
+import { PROJECTS, ProjectData } from '../data/projects';
+import { BLOGS, BlogPostData } from '../data/blogs';
+
+// Static projects API (replaces backend)
+export const projectsAPI = {
+  getAll: async (filters?: { status?: string; type?: string; featured?: boolean }): Promise<{ data: ProjectData[] }> => {
+    let filtered = [...PROJECTS];
+    
+    if (filters?.status) {
+      // Simulate status filter (all hardcoded as 'completed')
+      filtered = filtered.filter(p => p.solution); // Has outcome/completed
+    }
+    if (filters?.type) {
+      filtered = filtered.filter(p => p.projectType.toLowerCase().includes(filters.type!.toLowerCase()));
+    }
+    if (filters?.featured !== undefined) {
+      filtered = filtered.filter(p => p.liveUrl !== undefined);
+    }
+    
+    // Simulate async
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return { data: filtered };
   },
 
-  getBySlug: async (slug: string): Promise<ApiResponse<Record<string, unknown>>> => {
-    const response = await fetch(`${API_BASE_URL}/blogs/${slug}`);
-    return handleResponse(response) as Promise<ApiResponse<Record<string, unknown>>>;
-  },
-
-  create: async (data: Record<string, unknown>): Promise<ApiResponse<Record<string, unknown>>> => {
-    const response = await fetch(`${API_BASE_URL}/blogs`, {
-      method: 'POST',
-      headers: getHeaders(true),
-      body: JSON.stringify(data)
-    });
-    return handleResponse(response) as Promise<ApiResponse<Record<string, unknown>>>;
-  },
-
-  update: async (id: string, data: Record<string, unknown>): Promise<ApiResponse<Record<string, unknown>>> => {
-    const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
-      method: 'PUT',
-      headers: getHeaders(true),
-      body: JSON.stringify(data)
-    });
-    return handleResponse(response) as Promise<ApiResponse<Record<string, unknown>>>;
-  },
-
-  delete: async (id: string): Promise<ApiResponse<Record<string, unknown>>> => {
-    const response = await fetch(`${API_BASE_URL}/blogs/${id}`, {
-      method: 'DELETE',
-      headers: getHeaders()
-    });
-    return handleResponse(response) as Promise<ApiResponse<Record<string, unknown>>>;
+  getBySlug: async (slug: string): Promise<{ data: ProjectData | null }> => {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const project = PROJECTS.find(p => p.slug === slug);
+    return { data: project || null };
   }
 };
 
-// Projects API
-export const projectsAPI = {
-  getAll: async (filters?: { status?: string; type?: string; featured?: boolean }): Promise<ApiResponse<Record<string, unknown>[]>> => {
-    const params = new URLSearchParams();
-    if (filters?.status) params.append('status', filters.status);
-    if (filters?.type) params.append('type', filters.type);
-    if (filters?.featured) params.append('featured', 'true');
-
-    const response = await fetch(`${API_BASE_URL}/projects${params.toString() ? '?' + params : ''}`);
-    return handleResponse(response) as unknown as Promise<ApiResponse<Record<string, unknown>[]>>;
+// Static blogs API (replaces backend)
+export const blogsAPI = {
+  getAll: async (filters?: { status?: string; category?: string; featured?: boolean }): Promise<{ data: BlogPostData[] }> => {
+    let filtered = [...BLOGS];
+    
+    if (filters?.status === 'published') {
+      filtered = filtered.filter(b => b.status === 'published');
+    }
+    if (filters?.category) {
+      filtered = filtered.filter(b => b.category.toLowerCase().includes(filters.category!.toLowerCase()));
+    }
+    if (filters?.featured) {
+      filtered = filtered.filter(b => b.featured);
+    }
+    
+    await new Promise(resolve => setTimeout(resolve, 300));
+    return { data: filtered };
   },
 
-  getBySlug: async (slug: string): Promise<ApiResponse<Record<string, unknown>>> => {
-    const response = await fetch(`${API_BASE_URL}/projects/${slug}`);
-    return handleResponse(response) as Promise<ApiResponse<Record<string, unknown>>>;
-  },
-
-  create: async (data: Record<string, unknown>): Promise<ApiResponse<Record<string, unknown>>> => {
-    const response = await fetch(`${API_BASE_URL}/projects`, {
-      method: 'POST',
-      headers: getHeaders(true),
-      body: JSON.stringify(data)
-    });
-    return handleResponse(response) as Promise<ApiResponse<Record<string, unknown>>>;
-  },
-
-  update: async (id: string, data: Record<string, unknown>): Promise<ApiResponse<Record<string, unknown>>> => {
-    const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
-      method: 'PUT',
-      headers: getHeaders(true),
-      body: JSON.stringify(data)
-    });
-    return handleResponse(response) as Promise<ApiResponse<Record<string, unknown>>>;
-  },
-
-  delete: async (id: string): Promise<ApiResponse<Record<string, unknown>>> => {
-    const response = await fetch(`${API_BASE_URL}/projects/${id}`, {
-      method: 'DELETE',
-      headers: getHeaders()
-    });
-    return handleResponse(response) as Promise<ApiResponse<Record<string, unknown>>>;
+  getBySlug: async (slug: string): Promise<{ data: BlogPostData | null }> => {
+    await new Promise(resolve => setTimeout(resolve, 500));
+    const blog = BLOGS.find(b => b.slug === slug);
+    return { data: blog || null };
   }
 };
 

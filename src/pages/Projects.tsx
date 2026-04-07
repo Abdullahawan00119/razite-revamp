@@ -5,7 +5,7 @@ import { ArrowRight, Code2, Layers, Sparkles, CheckCircle2 } from "lucide-react"
 import { Button } from "@/components/ui/button";
 import SectionHeading from "@/components/SectionHeading";
 import ProjectCard from "@/components/ProjectCard";
-import { projectsAPI } from "@/lib/api";
+import { PROJECTS, ProjectData as Project } from "@/data/projects";
 
 interface Project {
   _id: string;
@@ -30,26 +30,9 @@ const COLORS = [
 const ITEMS_PER_PAGE = 9;
 
 const Projects = () => {
-  const [projects, setProjects] = useState<Project[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [projects] = useState<Project[]>(PROJECTS);
+  const [loading] = useState(false);
   const [page, setPage] = useState(1);
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        setLoading(true);
-        const response = await projectsAPI.getAll();
-        const projectsData = (response.data as unknown as Project[]) || [];
-        setProjects(projectsData);
-      } catch (error) {
-        console.error("Failed to load projects:", error);
-        setProjects([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchProjects();
-  }, []);
 
   const totalPages = Math.ceil(projects.length / ITEMS_PER_PAGE);
   const paginated = projects.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);

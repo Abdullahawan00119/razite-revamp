@@ -3,7 +3,7 @@ import { motion } from "framer-motion";
 import { ArrowLeft, Calendar, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
-import { blogsAPI } from "@/lib/api";
+import { BLOGS, BlogPostData } from "@/data/blogs";
 
 interface BlogPostData {
   _id?: string;
@@ -42,25 +42,11 @@ const BlogPost = () => {
       try {
         setLoading(true);
         setError(null);
-        const response = await blogsAPI.getBySlug(slug);
-        
-        if (response.success && response.data) {
-          // Extract the blog post data - handle nested response
-          let blogData: unknown = response.data;
-          
-          // If the response contains a nested data property, extract it
-          if (blogData && typeof blogData === 'object' && 'data' in blogData && !('title' in blogData)) {
-            blogData = (blogData as Record<string, unknown>).data;
-          }
-          
-          // Validate that we have required fields
-          if (blogData && typeof blogData === 'object' && 'title' in blogData && 'content' in blogData) {
-            setPost(blogData as unknown as BlogPostData);
-          } else {
-            setError("Invalid blog post format");
-          }
+        const foundPost = BLOGS.find(b => b.slug === slug);
+        if (foundPost) {
+          setPost(foundPost);
         } else {
-          setError(response.message || "Blog post not found");
+          setError("Blog post not found");
         }
       } catch (err) {
         console.error("Failed to fetch blog post:", err);

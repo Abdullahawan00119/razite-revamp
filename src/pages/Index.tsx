@@ -297,17 +297,14 @@ const Index = () => {
       {/* Featured Projects */}
       <section className="section-padding bg-muted/20">
         <div className="container">
-          <div className="flex flex-col md:flex-row md:items-end justify-center md:justify-between gap-6 mb-12">
+          <div className="text-center mb-12 max-w-4xl mx-auto">
             <SectionHeading
               label="Case Studies"
               title="Featured Projects"
               description="Selected work that demonstrates our technical excellence and creative problem solving."
               center={true}
-              className="mb-0 flex-1 md:text-left max-w-md"
+              className="text-center mx-auto mb-0 px-4 max-w-2xl"
             />
-            <Button asChild variant="outline" className="hidden md:flex">
-              <Link to="/projects">View All Projects <ArrowRight className="ml-2 h-4 w-4" /></Link>
-            </Button>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -322,8 +319,8 @@ const Index = () => {
             )}
           </div>
 
-          <div className="mt-12 text-center md:hidden">
-            <Button asChild variant="outline" size="lg" className="w-full">
+          <div className="mt-12 text-center">
+            <Button asChild variant="outline" size="lg" className="w-full sm:w-auto px-8">
               <Link to="/projects">View All Projects <ArrowRight className="ml-2 h-4 w-4" /></Link>
             </Button>
           </div>

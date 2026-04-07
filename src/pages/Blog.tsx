@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar, Sparkles } from "lucide-react";
 import SectionHeading from "@/components/SectionHeading";
 import BlogCard from "@/components/BlogCard";
-import { blogsAPI } from "@/lib/api";
+import { BLOGS, BlogPostData as BlogPost } from "@/data/blogs";
 
 interface BlogPost {
   _id: string;
@@ -21,26 +21,8 @@ const fadeUp = {
 };
 
 const Blog = () => {
-  const [posts, setPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      try {
-        setLoading(true);
-        const response = await blogsAPI.getAll({ status: 'published' });
-        const blogsData = (response.data as unknown as BlogPost[]) || [];
-        setPosts(blogsData);
-      } catch (error) {
-        console.error('Failed to load blogs:', error);
-        setPosts([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBlogs();
-  }, []);
+  const posts: BlogPost[] = BLOGS.filter(post => post.status === 'published');
+  const [loading] = useState(false);
 
   return (
     <>
