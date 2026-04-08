@@ -1,4 +1,4 @@
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+  import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
@@ -18,14 +18,25 @@ import Careers from "./pages/Careers";
 import NotFound from "./pages/NotFound";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
-import AdminBlogs from "./pages/AdminBlogs";
-import AdminProjects from "./pages/AdminProjects";
+
+
 import AdminJobs from "./pages/AdminJobs";
 import ApplicantsDashboard from "./pages/ApplicantsDashboard";
-import ProjectDetail from "./pages/ProjectDetail";
+import SimpleProjectDetail from "./pages/SimpleProjectDetail";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
+import { useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -34,14 +45,15 @@ const App = () => (
       <Toaster />
       <Sonner />
       <AuthProvider>
-        <BrowserRouter>
+        <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+          <ScrollToTop />
           <Routes>
             <Route element={<Layout />}>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
               <Route path="/projects" element={<Projects />} />
-              <Route path="/projects/:id" element={<ProjectDetail />} />
+              <Route path="/projects/:id" element={<SimpleProjectDetail />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
@@ -63,8 +75,8 @@ const App = () => (
             >
               <Route path="/admin" element={<AdminDashboard />} />
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/blogs" element={<AdminBlogs />} />
-              <Route path="/admin/projects" element={<AdminProjects />} />
+
+
               <Route path="/admin/jobs" element={<AdminJobs />} />
               <Route path="/admin/applicants" element={<ApplicantsDashboard />} />
             </Route>

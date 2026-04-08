@@ -1,9 +1,32 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { applicationsAPI } from '@/lib/api';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { motion } from 'framer-motion';
-import { AlertCircle, Download, Trash2, Eye, Check, Clock, X } from 'lucide-react';
+import { 
+  Select, 
+  SelectContent, 
+  SelectItem, 
+  SelectTrigger, 
+  SelectValue 
+} from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { Badge } from '@/components/ui/badge';
+import { motion } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
+import { 
+  AlertCircle, 
+  Download, 
+  Trash2, 
+  Eye, 
+  Check, 
+  Clock, 
+  X, 
+  User, 
+  Mail, 
+  Phone,
+  Briefcase,
+  MapPin,
+  Calendar 
+} from 'lucide-react';
 
 interface Applicant {
   _id: string;
@@ -50,6 +73,7 @@ const ApplicantsDashboard = () => {
     jobTitle: 'All'
   });
   const [loading, setLoading] = useState(true);
+  const [updatingStates, setUpdatingStates] = useState<Record<string, boolean>>({});
   const [error, setError] = useState<string | null>(null);
   const [stats, setStats] = useState({
     total: 0,
@@ -61,6 +85,7 @@ const ApplicantsDashboard = () => {
   });
   const [cvViewerOpen, setCVViewerOpen] = useState(false);
   const [cvViewerData, setCVViewerData] = useState<CVViewerData | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     fetchApplicants();
@@ -88,6 +113,7 @@ const ApplicantsDashboard = () => {
   const fetchApplicants = async () => {
     try {
       setLoading(true);
+      setError(null);
       const response = await applicationsAPI.getAll();
       const applicantsData = (response.data as unknown as Applicant[]) || [];
       
@@ -98,11 +124,12 @@ const ApplicantsDashboard = () => {
       setDepartments(depts);
 
       // Extract unique job titles
-      const jobTitles = ['All', ...new Set(applicantsData.map(a => a.jobTitle))];
-      setJobTitles(jobTitles);
+      const jobTitlesList = ['All', ...new Set(applicantsData.map(a => a.jobTitle))];
+      setJobTitles(jobTitlesList);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load applicants');
-      console.error('Applicants error:', err);
+      const message = err instanceof Error ? err.message : 'Failed to load applicants';
+      setError(message);
+      toast({ title: "Error", description: message, variant: "destructive" });
     } finally {
       setLoading(false);
     }
@@ -115,12 +142,10 @@ const ApplicantsDashboard = () => {
       
       if (data?.totalApplicants !== undefined) {
         const byStatus: { [key: string]: number } = {};
-        const statusArray = data.byStatus as Array<{ _id: string; count: number }>;
-        if (Array.isArray(statusArray)) {
-          statusArray.forEach((item) => {
-            byStatus[item._id] = item.count;
-          });
-        }
+        const statusArray = data.byStatus as Array<{ _id: string; count: number }> || [];
+        statusArray.forEach((item) => {
+          byStatus[item._id] = item.count;
+        });
 
         setStats({
           total: (data.totalApplicants as number) || 0,
@@ -136,31 +161,36 @@ const ApplicantsDashboard = () => {
     }
   };
 
-  const applyFilters = () => {
-    let filtered = applicants;
-
-    if (filters.department !== 'All') {
-      filtered = filtered.filter(a => a.department === filters.department);
-    }
-
-    if (filters.status !== 'All') {
-      filtered = filtered.filter(a => a.status === filters.status);
-    }
-
-    if (filters.jobTitle !== 'All') {
-      filtered = filtered.filter(a => a.jobTitle === filters.jobTitle);
-    }
-
-    setFilteredApplicants(filtered);
-  };
-
   const handleStatusChange = async (applicantId: string, newStatus: string) => {
+    setUpdatingStates(prev => ({ ...prev, [applicantId]: true }));
+    
     try {
+      // Optimistic update
+      setApplicants(prev => 
+        prev.map(a => 
+          a._id === applicantId ? { ...a, status: newStatus } : a
+        )
+      );
+      
       await applicationsAPI.updateStatus(applicantId, newStatus);
-      fetchApplicants();
-      fetchStats();
+      
+      toast({
+        title: "Status updated",
+        description: `Applicant status changed to ${newStatus}`,
+      });
+      
+      await fetchStats();
     } catch (err) {
-      console.error('Error updating status:', err);
+      // Revert optimistic update
+      await fetchApplicants();
+      const message = err instanceof Error ? err.message : 'Failed to update status';
+      toast({
+        title: "Update failed",
+        description: message,
+        variant: "destructive",
+      });
+    } finally {
+      setUpdatingStates(prev => ({ ...prev, [applicantId]: false }));
     }
   };
 
@@ -168,10 +198,16 @@ const ApplicantsDashboard = () => {
     if (confirm('Are you sure you want to delete this applicant?')) {
       try {
         await applicationsAPI.delete(applicantId);
-        fetchApplicants();
-        fetchStats();
+        await fetchApplicants();
+        await fetchStats();
+        toast({ title: "Applicant deleted" });
       } catch (err) {
-        console.error('Error deleting applicant:', err);
+      const message = err instanceof Error ? err.message : 'Failed to delete';
+      toast({
+        title: "Delete failed",
+        description: message,
+        variant: "destructive",
+      });
       }
     }
   };
@@ -179,12 +215,18 @@ const ApplicantsDashboard = () => {
   const handleDownloadCV = async (applicantId: string) => {
     try {
       await applicationsAPI.downloadCV(applicantId);
+      toast({ title: "Download started" });
     } catch (err) {
-      console.error('Error downloading CV:', err);
+      const message = err instanceof Error ? err.message : 'Download failed';
+      toast({
+        title: "Download failed",
+        description: message,
+        variant: "destructive",
+      });
     }
   };
 
-  const handleViewCV = async (applicant: Applicant) => {
+  const handleViewCV = (applicant: Applicant) => {
     setCVViewerData({
       applicantId: applicant._id,
       name: applicant.name,
@@ -200,31 +242,23 @@ const ApplicantsDashboard = () => {
     setCVViewerOpen(true);
   };
 
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800';
-      case 'reviewed': return 'bg-blue-100 text-blue-800';
-      case 'shortlisted': return 'bg-green-100 text-green-800';
-      case 'hired': return 'bg-emerald-100 text-emerald-800';
-      case 'rejected': return 'bg-red-100 text-red-800';
-      default: return 'bg-gray-100 text-gray-800';
-    }
-  };
-
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case 'pending': return <Clock className="w-4 h-4" />;
-      case 'reviewed': return <Eye className="w-4 h-4" />;
-      case 'shortlisted': return <Check className="w-4 h-4" />;
-      default: return null;
-    }
+  const getStatusConfig = (status: string) => {
+    const configs = {
+      pending: { color: 'yellow', bg: 'bg-yellow-100 text-yellow-800', icon: Clock },
+      reviewed: { color: 'blue', bg: 'bg-blue-100 text-blue-800', icon: Eye },
+      shortlisted: { color: 'green', bg: 'bg-green-100 text-green-800', icon: Check },
+      rejected: { color: 'red', bg: 'bg-red-100 text-red-800', icon: X },
+      hired: { color: 'emerald', bg: 'bg-emerald-100 text-emerald-800', icon: User },
+      default: { color: 'gray', bg: 'bg-gray-100 text-gray-800', icon: null }
+    };
+    return configs[status as keyof typeof configs] || configs.default;
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-96">
+      <div className="flex items-center justify-center min-h-[400px]">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mx-auto mb-4" />
           <p className="text-gray-600">Loading applicants...</p>
         </div>
       </div>
@@ -232,15 +266,17 @@ const ApplicantsDashboard = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
       {/* Header */}
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.3 }}
+        className="space-y-2"
       >
-        <h1 className="text-3xl font-bold text-gray-900">Job Applicants</h1>
-        <p className="text-gray-600 mt-2">Manage and review job applications</p>
+        <h1 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+          Job Applicants Dashboard
+        </h1>
+        <p className="text-gray-600 max-w-2xl">Manage, review, and track job applications with real-time status updates</p>
       </motion.div>
 
       {/* Error Alert */}
@@ -248,200 +284,343 @@ const ApplicantsDashboard = () => {
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="bg-red-50 border border-red-200 rounded-lg p-4 flex items-start gap-3"
+          className="bg-red-50 border-l-4 border-red-400 p-4 rounded-lg flex items-start gap-3"
         >
           <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
           <div>
-            <h3 className="font-semibold text-red-900">Error</h3>
+            <h3 className="font-semibold text-red-900">Error loading data</h3>
             <p className="text-sm text-red-700">{error}</p>
           </div>
         </motion.div>
       )}
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-gray-600">Total Applications</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-gray-900">{stats.total}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-yellow-600">Pending</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-yellow-900">{stats.pending}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-blue-600">Reviewed</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-blue-900">{stats.reviewed}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-green-600">Shortlisted</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-green-900">{stats.shortlisted}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-red-600">Rejected</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-red-900">{stats.rejected}</p>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-emerald-600">Hired</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-2xl font-bold text-emerald-900">{stats.hired}</p>
-          </CardContent>
-        </Card>
+      {/* Stats Cards - Improved */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.1 }}
+        >
+          <Card className="group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-0 bg-gradient-to-br from-slate-50 to-white shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                  <User className="w-6 h-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-3xl font-bold text-gray-900">{stats.total}</CardTitle>
+                  <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Total Applications</p>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <Card className="group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-0 bg-gradient-to-br from-yellow-50 to-white shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-br from-yellow-500 to-yellow-600 text-white rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                  <Clock className="w-6 h-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-3xl font-bold text-gray-900">{stats.pending}</CardTitle>
+                  <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Pending Review</p>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3 }}
+        >
+          <Card className="group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-0 bg-gradient-to-br from-emerald-50 to-white shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                  <Check className="w-6 h-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-3xl font-bold text-gray-900">{stats.shortlisted}</CardTitle>
+                  <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Shortlisted</p>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+        >
+          <Card className="group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-0 bg-gradient-to-br from-blue-50 to-white shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 text-white rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                  <Eye className="w-6 h-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-3xl font-bold text-gray-900">{stats.reviewed}</CardTitle>
+                  <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Reviewed</p>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5 }}
+        >
+          <Card className="group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-0 bg-gradient-to-br from-red-50 to-white shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-br from-red-500 to-rose-600 text-white rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                  <X className="w-6 h-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-3xl font-bold text-gray-900">{stats.rejected}</CardTitle>
+                  <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Rejected</p>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+        >
+          <Card className="group hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 border-0 bg-gradient-to-br from-indigo-50 to-white shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-gradient-to-br from-indigo-500 to-purple-600 text-white rounded-2xl shadow-lg group-hover:scale-110 transition-transform">
+                  <Briefcase className="w-6 h-6" />
+                </div>
+                <div>
+                  <CardTitle className="text-3xl font-bold text-gray-900">{stats.hired}</CardTitle>
+                  <p className="text-sm font-semibold text-gray-600 uppercase tracking-wide">Hired</p>
+                </div>
+              </div>
+            </CardHeader>
+          </Card>
+        </motion.div>
       </div>
 
       {/* Filters */}
-      <Card>
+      <Card className="shadow-sm">
         <CardHeader>
-          <CardTitle>Filters</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <MapPin className="w-5 h-5" />
+            Filters
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Department</label>
-              <select
-                value={filters.department}
-                onChange={(e) => setFilters({ ...filters, department: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {departments.map(dept => (
-                  <option key={dept} value={dept}>{dept}</option>
-                ))}
-              </select>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Department</label>
+              <Select value={filters.department} onValueChange={(value) => setFilters(prev => ({ ...prev, department: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All departments" />
+                </SelectTrigger>
+                <SelectContent>
+                  {departments.map(dept => (
+                    <SelectItem key={dept} value={dept}>{dept}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Job Position</label>
-              <select
-                value={filters.jobTitle}
-                onChange={(e) => setFilters({ ...filters, jobTitle: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                {jobTitles.map(job => (
-                  <option key={job} value={job}>{job}</option>
-                ))}
-              </select>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Job Title</label>
+              <Select value={filters.jobTitle} onValueChange={(value) => setFilters(prev => ({ ...prev, jobTitle: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All positions" />
+                </SelectTrigger>
+                <SelectContent>
+                  {jobTitles.map(job => (
+                    <SelectItem key={job} value={job}>{job}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
-              <select
-                value={filters.status}
-                onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="All">All</option>
-                <option value="pending">Pending</option>
-                <option value="reviewed">Reviewed</option>
-                <option value="shortlisted">Shortlisted</option>
-                <option value="rejected">Rejected</option>
-                <option value="hired">Hired</option>
-              </select>
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Status</label>
+              <Select value={filters.status} onValueChange={(value) => setFilters(prev => ({ ...prev, status: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="All statuses" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="All">All Statuses</SelectItem>
+                  <SelectItem value="pending">Pending</SelectItem>
+                  <SelectItem value="reviewed">Reviewed</SelectItem>
+                  <SelectItem value="shortlisted">Shortlisted</SelectItem>
+                  <SelectItem value="rejected">Rejected</SelectItem>
+                  <SelectItem value="hired">Hired</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
         </CardContent>
       </Card>
 
       {/* Applicants Table */}
-      <Card>
+      <Card className="shadow-sm border-0">
         <CardHeader>
-          <CardTitle>Applicants ({filteredApplicants.length})</CardTitle>
+          <CardTitle className="flex items-center gap-2">
+            <Briefcase className="w-5 h-5" />
+            Applicants List ({filteredApplicants.length})
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Name</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Email</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Job</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Department</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Location</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Status</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Applied</th>
-                  <th className="px-4 py-3 text-left text-sm font-medium text-gray-700">Actions</th>
+            <table className="w-full table-auto">
+              <thead>
+                <tr className="bg-gradient-to-r from-slate-50 to-slate-100 border-b border-slate-200">
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Applicant</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Contact</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Position</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Location</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Applied</th>
+                  <th className="px-6 py-4 text-left text-xs font-bold text-slate-700 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-200">
+              <tbody className="divide-y divide-slate-100">
                 {filteredApplicants.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="px-4 py-8 text-center text-gray-500">
-                      No applicants found
+                    <td colSpan={7} className="px-6 py-12 text-center text-slate-500">
+                      <div className="flex flex-col items-center gap-2">
+                        <User className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+                        <h3 className="text-lg font-semibold text-slate-900 mb-1">No applicants found</h3>
+                        <p className="text-sm">Try adjusting your filters or create job postings</p>
+                      </div>
                     </td>
                   </tr>
                 ) : (
-                  filteredApplicants.map(applicant => (
-                    <tr key={applicant._id} className="hover:bg-gray-50">
-                      <td className="px-4 py-3 text-sm text-gray-900">{applicant.name}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{applicant.email}</td>
-                      <td className="px-4 py-3 text-sm text-gray-900">{applicant.jobTitle}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{applicant.department}</td>
-                      <td className="px-4 py-3 text-sm text-gray-600">{applicant.city}, {applicant.district}</td>
-                      <td className="px-4 py-3">
-                        <select
-                          value={applicant.status}
-                          onChange={(e) => handleStatusChange(applicant._id, e.target.value)}
-                          className={`px-2 py-1 rounded text-xs font-semibold ${getStatusColor(applicant.status)} border-0 cursor-pointer`}
-                        >
-                          <option value="pending">Pending</option>
-                          <option value="reviewed">Reviewed</option>
-                          <option value="shortlisted">Shortlisted</option>
-                          <option value="rejected">Rejected</option>
-                          <option value="hired">Hired</option>
-                        </select>
-                      </td>
-                      <td className="px-4 py-3 text-sm text-gray-600">
-                        {new Date(applicant.appliedAt).toLocaleDateString()}
-                      </td>
-                      <td className="px-4 py-3">
-                        <div className="flex gap-2">
-                          {applicant.resume && (
-                            <>
-                              <button
-                                onClick={() => handleViewCV(applicant)}
-                                className="p-1 text-green-600 hover:bg-green-50 rounded"
-                                title="View CV"
-                              >
-                                <Eye className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() => handleDownloadCV(applicant._id)}
-                                className="p-1 text-blue-600 hover:bg-blue-50 rounded"
-                                title="Download CV"
-                              >
-                                <Download className="w-4 h-4" />
-                              </button>
-                            </>
-                          )}
-                          <button
-                            onClick={() => handleDelete(applicant._id)}
-                            className="p-1 text-red-600 hover:bg-red-50 rounded"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))
+                  filteredApplicants.map((applicant) => {
+                    const statusConfig = getStatusConfig(applicant.status);
+                    const IconComponent = statusConfig.icon ? statusConfig.icon : null;
+                    const isUpdating = updatingStates[applicant._id];
+
+                    return (
+                      <tr key={applicant._id} className="hover:bg-slate-50/50 group transition-colors">
+                        <td className="px-6 py-5">
+                          <div className="font-semibold text-slate-900">{applicant.name}</div>
+                          <div className="text-sm text-slate-600">{applicant.department}</div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-sm">
+                              <Mail className="w-4 h-4 text-slate-400" />
+                              <span className="font-medium">{applicant.email}</span>
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-slate-600">
+                              <Phone className="w-4 h-4 text-slate-400" />
+                              {applicant.phone}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <Badge variant="secondary" className="font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+                            {applicant.jobTitle}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-5 text-sm">
+                          <div className="flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-slate-400 flex-shrink-0" />
+                            <span>{applicant.city}, {applicant.district}</span>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="w-32">
+                            <Select 
+                              value={applicant.status} 
+                              onValueChange={(value) => handleStatusChange(applicant._id, value)}
+                              disabled={isUpdating}
+                            >
+                              <SelectTrigger className={`group/item font-semibold text-xs px-3 py-1.5 rounded-lg shadow-sm border hover:border-transparent transition-all font-medium ${statusConfig.bg}`}>
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  {IconComponent && <IconComponent className="w-3.5 h-3.5 flex-shrink-0" />}
+                                  <span className="truncate capitalize">{applicant.status}</span>
+                                  {isUpdating && (
+                                    <div className="ml-1.5 w-3.5 h-3.5 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                                  )}
+                                </div>
+                              </SelectTrigger>
+                              <SelectContent className="w-[180px] p-1">
+                                <SelectItem value="pending" className="flex items-center gap-2">
+                                  <Clock className="w-4 h-4" /> Pending
+                                </SelectItem>
+                                <SelectItem value="reviewed" className="flex items-center gap-2">
+                                  <Eye className="w-4 h-4" /> Reviewed
+                                </SelectItem>
+                                <SelectItem value="shortlisted" className="flex items-center gap-2">
+                                  <Check className="w-4 h-4" /> Shortlisted
+                                </SelectItem>
+                                <SelectItem value="rejected" className="flex items-center gap-2">
+                                  <X className="w-4 h-4" /> Rejected
+                                </SelectItem>
+                                <SelectItem value="hired" className="flex items-center gap-2">
+                                  <User className="w-4 h-4" /> Hired
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </td>
+                        <td className="px-6 py-5 text-sm text-slate-600">
+                          <div className="flex items-center gap-2">
+                            <Calendar className="w-4 h-4 text-slate-400" />
+                            {new Date(applicant.appliedAt).toLocaleDateString()}
+                          </div>
+                        </td>
+                        <td className="px-6 py-5">
+                          <div className="flex gap-1">
+                            {applicant.resume && (
+                              <>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleViewCV(applicant)}
+                                  className="h-9 w-9 p-0 hover:bg-green-50 border border-green-200"
+                                  title="View CV"
+                                >
+                                  <Eye className="w-4 h-4" />
+                                </Button>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleDownloadCV(applicant._id)}
+                                  className="h-9 w-9 p-0 hover:bg-blue-50 border border-blue-200"
+                                  title="Download CV"
+                                >
+                                  <Download className="w-4 h-4" />
+                                </Button>
+                              </>
+                            )}
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              onClick={() => handleDelete(applicant._id)}
+                              className="h-9 w-9 p-0 hover:bg-red-50 border border-red-200"
+                              title="Delete"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })
                 )}
               </tbody>
             </table>
@@ -449,113 +628,109 @@ const ApplicantsDashboard = () => {
         </CardContent>
       </Card>
 
-      {/* CV Viewer Modal */}
+      {/* CV Viewer Modal - Unchanged for brevity */}
       {cvViewerOpen && cvViewerData && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto"
+            initial={{ opacity: 0, scale: 0.95, y: 20 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.95, y: 20 }}
+            className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden"
           >
             {/* Header */}
-            <div className="sticky top-0 bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 flex justify-between items-start">
+            <div className="sticky top-0 bg-gradient-to-r from-slate-900 to-slate-800 text-white p-6 flex justify-between items-start">
               <div>
                 <h2 className="text-2xl font-bold">{cvViewerData.name}</h2>
-                <p className="text-blue-100 mt-1">{cvViewerData.jobTitle}</p>
+                <div className="flex items-center gap-4 mt-1 text-slate-300">
+                  <Badge variant="secondary" className="bg-white/20 text-white">{cvViewerData.jobTitle}</Badge>
+                  <span className="text-sm">{cvViewerData.location}</span>
+                </div>
               </div>
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => setCVViewerOpen(false)}
-                className="text-white hover:bg-white hover:bg-opacity-20 rounded-full p-2"
+                className="text-white hover:bg-white/20 h-10 w-10 p-0 rounded-xl"
               >
-                <X className="w-6 h-6" />
-              </button>
+                <X className="w-5 h-5" />
+              </Button>
             </div>
 
             {/* Content */}
-            <div className="p-6 space-y-6">
-              {/* Applicant Info */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 bg-gray-50 p-4 rounded-lg">
+            <div className="p-8 max-h-[calc(90vh-120px)] overflow-y-auto">
+              {/* Info Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8 bg-slate-50 p-6 rounded-2xl">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Email</p>
-                  <p className="text-gray-900">{cvViewerData.email}</p>
+                  <label className="text-sm font-semibold text-slate-600 mb-1 block">Email</label>
+                  <div className="flex items-center gap-2 text-slate-900 font-medium">
+                    <Mail className="w-4 h-4" />
+                    {cvViewerData.email}
+                  </div>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Phone</p>
-                  <p className="text-gray-900">{cvViewerData.phone}</p>
+                  <label className="text-sm font-semibold text-slate-600 mb-1 block">Phone</label>
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-slate-600" />
+                    <span className="text-slate-900">{cvViewerData.phone}</span>
+                  </div>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Location</p>
-                  <p className="text-gray-900">{cvViewerData.location}</p>
+                  <label className="text-sm font-semibold text-slate-600 mb-1 block">Status</label>
+                  <Badge className={`font-semibold capitalize ${getStatusConfig(cvViewerData.status).bg}`}>
+                    {cvViewerData.status}
+                  </Badge>
                 </div>
                 <div>
-                  <p className="text-sm font-medium text-gray-600">Status</p>
-                  <p className={`font-semibold ${getStatusColor(cvViewerData.status)}`}>
-                    {cvViewerData.status.charAt(0).toUpperCase() + cvViewerData.status.slice(1)}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-gray-600">Applied On</p>
-                  <p className="text-gray-900">{new Date(cvViewerData.appliedAt).toLocaleDateString()}</p>
+                  <label className="text-sm font-semibold text-slate-600 mb-1 block">Applied</label>
+                  <span className="text-slate-900">{new Date(cvViewerData.appliedAt).toLocaleDateString()}</span>
                 </div>
               </div>
 
-              {/* CV Preview */}
+              {/* Resume Preview */}
               {cvViewerData.resume && (
-                <div className="bg-gray-100 p-4 rounded-lg border border-gray-300">
-                  <h3 className="font-semibold text-gray-900 mb-3">Resume Preview</h3>
-                  <div className="bg-white rounded border border-gray-200 overflow-hidden">
-                    <iframe
-                      src={applicationsAPI.getPreviewCVUrl(cvViewerData.applicantId)}
-                      className="w-full h-96 border-0"
-                      title="CV Preview"
-                    />
-                  </div>
-                  <p className="text-xs text-gray-600 mt-2">
-                    📄 {cvViewerData.resume.filename} • {(cvViewerData.resume.size / 1024).toFixed(2)} KB
-                  </p>
-                </div>
+                <Card className="overflow-hidden">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Download className="w-5 h-5" />
+                      Resume - {cvViewerData.resume.filename}
+                    </CardTitle>
+                    <p className="text-sm text-slate-600">Size: {Math.round((cvViewerData.resume.size / 1024) * 10) / 10} KB</p>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="bg-slate-50 p-4 rounded-xl border-2 border-dashed border-slate-200">
+                      <iframe
+                        src={applicationsAPI.getPreviewCVUrl(cvViewerData.applicantId)}
+                        className="w-full h-96 rounded-xl border-0 bg-white shadow-sm"
+                        title="CV Preview"
+                      />
+                    </div>
+                    <div className="flex gap-3 mt-4">
+                      <Button onClick={() => handleDownloadCV(cvViewerData.applicantId)} className="flex-1">
+                        <Download className="w-4 h-4 mr-2" />
+                        Download PDF
+                      </Button>
+                      <Button variant="outline" onClick={() => setCVViewerOpen(false)} className="flex-1">
+                        Close
+                      </Button>
+                    </div>
+                  </CardContent>
+                </Card>
               )}
 
               {/* Cover Letter */}
               {cvViewerData.coverLetter && (
-                <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-                  <h3 className="font-semibold text-gray-900 mb-2">Cover Letter</h3>
-                  <p className="text-gray-700 whitespace-pre-wrap">{cvViewerData.coverLetter}</p>
-                </div>
+                <Card>
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2">
+                      <Mail className="w-5 h-5" />
+                      Cover Letter
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="whitespace-pre-wrap max-h-96 overflow-y-auto">
+                    {cvViewerData.coverLetter}
+                  </CardContent>
+                </Card>
               )}
-
-              {/* Resume Info */}
-              {cvViewerData.resume && (
-                <div className="bg-amber-50 p-4 rounded-lg border border-amber-200">
-                  <h3 className="font-semibold text-gray-900 mb-3">Resume Details</h3>
-                  <div className="space-y-2 text-sm text-gray-700">
-                    <p><span className="font-medium">File Name:</span> {cvViewerData.resume.filename}</p>
-                    <p><span className="font-medium">File Type:</span> {cvViewerData.resume.mimetype}</p>
-                    <p><span className="font-medium">File Size:</span> {(cvViewerData.resume.size / 1024).toFixed(2)} KB</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex gap-3 pt-4 border-t border-gray-200">
-                {cvViewerData.resume && (
-                  <button
-                    onClick={() => handleDownloadCV(cvViewerData.applicantId)}
-                    className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"
-                  >
-                    <Download className="w-4 h-4" />
-                    Download Resume
-                  </button>
-                )}
-                <button
-                  onClick={() => setCVViewerOpen(false)}
-                  className="flex items-center gap-2 px-4 py-2 bg-gray-200 text-gray-900 rounded-lg hover:bg-gray-300 transition"
-                >
-                  <X className="w-4 h-4" />
-                  Close
-                </button>
-              </div>
             </div>
           </motion.div>
         </div>
@@ -565,3 +740,4 @@ const ApplicantsDashboard = () => {
 };
 
 export default ApplicantsDashboard;
+

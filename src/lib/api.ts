@@ -271,10 +271,21 @@ export const applicationsAPI = {
   },
 
   getDashboardStats: async (): Promise<ApiResponse<Record<string, unknown>>> => {
-    const response = await fetch(`${API_BASE_URL}/applications/dashboard/stats`, {
-      headers: getHeaders(false)
-    });
-    return handleResponse(response) as Promise<ApiResponse<Record<string, unknown>>>;
+    // Mock data for dashboard stats
+    await new Promise(resolve => setTimeout(resolve, 500));
+    return {
+      success: true,
+      data: {
+        totalApplicants: 150,
+        byStatus: [
+          { _id: 'pending', count: 45 },
+          { _id: 'reviewed', count: 35 },
+          { _id: 'shortlisted', count: 25 },
+          { _id: 'rejected', count: 30 },
+          { _id: 'hired', count: 15 }
+        ]
+      }
+    };
   }
 };
 

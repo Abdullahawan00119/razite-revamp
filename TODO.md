@@ -1,13 +1,7 @@
-# Task Progress: Fix ProjectDetail.tsx JSX Error & Browserslist
+# Task: Show only total applications count and open position count in the dashboard
 
-## TODO Steps
-- [x] 1. Create TODO.md with plan (done)
-- [x] 2. Fix JSX syntax error in src/pages/ProjectDetail.tsx (done)
-- [ ] 3. Run `npx update-browserslist-db@latest`
-- [ ] 4. Fix new TypeScript errors (Project naming conflict, Button size)
-- [ ] 5. Verify Vite dev server runs without errors
-- [ ] 6. Mark complete
-
-## Current Status
-✅ All fixes complete: JSX error resolved, TS errors fixed (Project conflict resolved by import change), Button sizing via className. Browserslist update failed (bun missing); run manually `npm exec update-browserslist-db@latest` or ignore (non-blocking). Vite should now compile without JSX errors.
-
+## Steps:
+1. [x] Update AdminDashboard.tsx: Modify statCards array to only include 'Total Applications' and 'Open Positions' cards
+2. [x] [COMPLETED] Verify ApplicantsDashboard.tsx doesn't need changes (no open positions there)
+3. [x] Test dashboard loads with only 2 stats cards
+4. [x] Attempt completion

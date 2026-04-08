@@ -10,8 +10,8 @@ const AdminLayout = () => {
 
   const navigationItems = [
     { label: 'Dashboard', href: '/admin', icon: '📊' },
-    { label: 'Blogs', href: '/admin/blogs', icon: '📝' },
-    { label: 'Projects', href: '/admin/projects', icon: '🚀' },
+
+
     { label: 'Jobs', href: '/admin/jobs', icon: '💼' },
     { label: 'Applicants', href: '/admin/applicants', icon: '👥' }
   ];

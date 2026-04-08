@@ -6,6 +6,7 @@ export interface ProjectData {
   projectType: string;
   technologies: string[];
   image: string;
+  gallery?: string[];  // New: array of screenshot URLs
   highlights?: string[];
   challenge?: string;
   solution?: string;
@@ -13,6 +14,8 @@ export interface ProjectData {
   client?: string;
   year?: string;
   liveUrl?: string;
+  teamSize?: string;   // New: e.g. "8 engineers"
+  duration?: string;   // New: e.g. "4 months"
 }
 
 export const PROJECTS: ProjectData[] = [
@@ -24,13 +27,22 @@ export const PROJECTS: ProjectData[] = [
     projectType: 'Web Development',
     technologies: ['Next.js', 'Node.js', 'PostgreSQL', 'Redis', 'Stripe', 'AWS'],
     image: 'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&w=800&q=80',
+      'https://images.unsplash.com/photo-1558618047-3c8c76fdd7e4?ixlib=rb-4.0.3&w=800&q=80',
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=800&q=80',
+      'https://images.unsplash.com/photo-1559526325-9e255d7a8665?ixlib=rb-4.0.3&w=800&q=80',
+      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&w=800&q=80'
+    ],
     highlights: ['99.99% uptime', '50K+ concurrent users', 'Multi-currency support'],
     challenge: 'Legacy monolithic system needed migration to microservices with zero downtime. Complex inventory sync across 15 warehouses.',
     solution: 'Phased migration using Next.js + Node.js microservices. Redis caching for real-time inventory. Stripe Connect for multi-vendor payments. AWS ECS for orchestration.',
     outcome: 'Reduced cart abandonment by 42%. Handled Black Friday peak of 85K concurrent users. 3x faster checkout flow.',
     client: 'Global Retail Inc.',
     year: '2024',
-    liveUrl: 'https://ecommerce.example.com'
+    liveUrl: 'https://ecommerce.example.com',
+    teamSize: '8 engineers',
+    duration: '4 months'
   },
   {
     _id: '2',
@@ -40,12 +52,18 @@ export const PROJECTS: ProjectData[] = [
     projectType: 'Data Analytics',
     technologies: ['React', 'TypeScript', 'D3.js', 'WebSockets', 'MongoDB', 'Kafka'],
     image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&w=800&q=80',
+      'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?ixlib=rb-4.0.3&w=800&q=80',
+      'https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&w=800&q=80'
+    ],
     highlights: ['Real-time data', 'SOC2 compliant', 'Mobile responsive'],
     challenge: 'Process 1M+ transactions/min with sub-500ms latency. Ensure financial data security and audit trails.',
     solution: 'React dashboard with D3 visualizations. Kafka for event streaming. MongoDB time-series. WebSocket bi-directional updates.',
     outcome: 'Reduced reporting time from 2hrs to 30s. 100% audit compliance. 25% increase in user engagement.',
     client: 'SecureFin Tech',
-    year: '2023'
+    year: '2023',
+    liveUrl: 'https://fintech.example.com'
   },
   {
     _id: '3',
@@ -55,12 +73,20 @@ export const PROJECTS: ProjectData[] = [
     projectType: 'Cloud Migration',
     technologies: ['Vue.js', 'Django', 'AWS Lambda', 'Elasticsearch', 'Docker'],
     image: 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80',
+    gallery: [
+      'https://images.unsplash.com/photo-1558618047-3c8c76fdd7e4?ixlib=rb-4.0.3&w=800&q=80',
+      'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?ixlib=rb-4.0.3&w=800&q=80',
+      'https://images.unsplash.com/photo-1509526325-9e255d7a8665?ixlib=rb-4.0.3&w=800&q=80',
+      'https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?ixlib=rb-4.0.3&w=800&q=80'
+    ],
     highlights: ['AI matching', 'Zero trust security', 'Multi-tenant'],
     challenge: 'Onboard 10K+ employees across 50+ global offices with role-based access and compliance requirements.',
     solution: 'Vue.js frontend with Django REST API. AWS serverless architecture. Elasticsearch for employee search. Multi-tenant Docker containers.',
     outcome: 'Onboarding time reduced by 67%. 99.8% system availability. Processed 500K+ HR actions/month.',
     client: 'GlobalCorp HR',
-    year: '2024'
+    year: '2024',
+    teamSize: '6 developers',
+    duration: '3 months'
   },
   {
     _id: '4',
