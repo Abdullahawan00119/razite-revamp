@@ -51,12 +51,33 @@ const getHeaders = (includeContentType = true): HeadersInit => {
 };
 
 // Helper function to handle API responses
+export const safeJson = async (response: Response): Promise<any> => {
+  const contentType = response.headers.get('content-type') || '';
+  
+  if (!contentType.includes('application/json')) {
+    const text = await response.text();
+    console.error('Non-JSON response:', response.status, response.statusText, text.substring(0, 200));
+    throw new Error(`Expected JSON but got ${contentType || 'no content-type'} (Status: ${response.status}). Response preview: ${text.substring(0, 100)}`);
+  }
+  
+  try {
+    return await response.json();
+  } catch (parseError) {
+    console.error('JSON parse error:', parseError);
+    throw new Error(`Invalid JSON response from server (Status: ${response.status})`);
+  }
+};
+
 const handleResponse = async (response: Response): Promise<ApiResponse<Record<string, unknown>>> => {
   if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.message || `HTTP Error: ${response.status}`);
+    try {
+      const errorData = await safeJson(response);
+      throw new Error(errorData.message || errorData.error || `HTTP ${response.status}: ${response.statusText}`);
+    } catch (jsonError) {
+      throw new Error(`HTTP ${response.status}: ${response.statusText} (non-JSON response)`);
+    }
   }
-  return response.json();
+  return safeJson(response) as Promise<ApiResponse<Record<string, unknown>>>;
 };
 
 // Static data APIs for projects and blogs (hardcoded)

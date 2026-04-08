@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { safeJson } from '@/lib/api.ts';
 
 interface Admin {
   id: string;
@@ -53,7 +54,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       );
 
       if (response.ok) {
-        const data = await response.json();
+        const data = await safeJson(response);
         if (data.success) {
           setAdmin(data.admin);
         }
@@ -83,7 +84,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
     );
 
-    const data = await response.json();
+    const data = await safeJson(response);
 
     if (!response.ok || !data.success) {
       throw new Error(data.message || 'Login failed');
@@ -117,7 +118,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       );
 
       if (response.ok) {
-        const data = await response.json();
+        const data = await safeJson(response);
         return data.success;
       }
 

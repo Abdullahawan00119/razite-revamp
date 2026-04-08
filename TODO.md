@@ -1,7 +1,11 @@
-# Task: Show only total applications count and open position count in the dashboard
+# TODO: Fix Vercel JSON Parse Error on Login
 
 ## Steps:
-1. [x] Update AdminDashboard.tsx: Modify statCards array to only include 'Total Applications' and 'Open Positions' cards
-2. [x] [COMPLETED] Verify ApplicantsDashboard.tsx doesn't need changes (no open positions there)
-3. [x] Test dashboard loads with only 2 stats cards
-4. [x] Attempt completion
+- [x] Step 1: Create safe JSON response handler in src/lib/api.ts
+- [x] Step 2: Refactor AuthContext.tsx login() to use safe parsing
+- [x] Step 3: Refactor AuthContext.tsx verifyStoredToken() 
+- [x] Step 4: Refactor AuthContext.tsx verifyToken()
+- [ ] Step 5: Test locally: Run `npm run dev` and test admin login
+- [ ] Step 6: Deploy to Vercel: `vercel --prod` and test login
+- [ ] Step 7: Ensure VITE_API_URL is set in Vercel dashboard (your backend URL)
+
