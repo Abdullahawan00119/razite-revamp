@@ -126,8 +126,8 @@ export const jobsAPI = {
 
 // Applications API
 export const applicationsAPI = {
-  getAll: async (filters?: any): Promise<{ data: ApplicantData[]; success: true }> => {
-    const searchParams = new URLSearchParams(filters).toString();
+  getAll: async (filters?: { department?: string; status?: string; jobTitle?: string; startDate?: string; endDate?: string }): Promise<{ data: ApplicantData[]; success: true }> => {
+    const searchParams = new URLSearchParams(filters as any).toString();
     const endpoint = searchParams ? `/applications?${searchParams}` : '/applications';
     return apiRequest(endpoint);
   },

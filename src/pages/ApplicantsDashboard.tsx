@@ -58,6 +58,8 @@ interface FilterOptions {
   department: string;
   status: string;
   jobTitle: string;
+  startDate: string;
+  endDate: string;
 }
 
 interface CVViewerData {
@@ -81,7 +83,9 @@ const ApplicantsDashboard = () => {
   const [filters, setFilters] = useState<FilterOptions>({
     department: 'All',
     status: 'All',
-    jobTitle: 'All'
+    jobTitle: 'All',
+    startDate: '',
+    endDate: ''
   });
   const [loading, setLoading] = useState(true);
   const [updatingStates, setUpdatingStates] = useState<Record<string, boolean>>({});
@@ -113,6 +117,14 @@ const ApplicantsDashboard = () => {
     }
     if (filters.jobTitle !== 'All') {
       filtered = filtered.filter(a => a.jobTitle === filters.jobTitle);
+    }
+    if (filters.startDate) {
+      filtered = filtered.filter(a => new Date(a.appliedAt) >= new Date(filters.startDate));
+    }
+    if (filters.endDate) {
+      const end = new Date(filters.endDate);
+      end.setHours(23, 59, 59, 999);
+      filtered = filtered.filter(a => new Date(a.appliedAt) <= end);
     }
     setFilteredApplicants(filtered);
   }, [applicants, filters]);
@@ -163,25 +175,38 @@ const ApplicantsDashboard = () => {
 
   const handleStatusChange = useCallback(async (applicantId: string, newStatus: string) => {
     setUpdatingStates(prev => ({ ...prev, [applicantId]: true }));
+    const oldStatus = applicants.find(a => a._id === applicantId)?.status;
+
     try {
-      // Optimistic UI updates
+      // Optimistic UI updates - Applicants
       setApplicants(prev => prev.map(a => a._id === applicantId ? { ...a, status: newStatus } : a));
       if (cvViewerData?.applicantId === applicantId) {
         setCVViewerData(prev => prev ? { ...prev, status: newStatus } : null);
       }
 
+      // Optimistic UI updates - Cards/Stats
+      if (oldStatus && oldStatus !== newStatus) {
+        setStats(prev => {
+          const newStats = { ...prev };
+          if (oldStatus in newStats) (newStats as any)[oldStatus]--;
+          if (newStatus in newStats) (newStats as any)[newStatus]++;
+          return newStats;
+        });
+      }
+
       await applicationsAPI.updateStatus(applicantId, { status: newStatus });
       
       toast({ title: "Status updated", description: `Status changed to ${newStatus}` });
-      fetchStats();
-      setTimeout(fetchStats, 800);
+      // Fetch fresh stats in background to ensure precision
+      setTimeout(fetchStats, 1500);
     } catch (err: any) {
       fetchApplicants();
+      fetchStats();
       toast({ title: "Update failed", description: err.message || 'Failed to update status', variant: "destructive" });
     } finally {
       setUpdatingStates(prev => ({ ...prev, [applicantId]: false }));
     }
-  }, [fetchApplicants, fetchStats, toast]);
+  }, [applicants, cvViewerData, fetchApplicants, fetchStats, toast]);
 
   const handleDelete = useCallback(async (applicantId: string) => {
     if (!confirm('Are you sure? This deletes the applicant and CV permanently.')) return;
@@ -355,7 +380,37 @@ const ApplicantsDashboard = () => {
                 </SelectContent>
               </Select>
             </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block text-gray-700">From Date</label>
+              <Input 
+                type="date" 
+                value={filters.startDate} 
+                onChange={(e) => setFilters(p => ({ ...p, startDate: e.target.value }))}
+                className="h-10"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium mb-2 block text-gray-700">To Date</label>
+              <Input 
+                type="date" 
+                value={filters.endDate} 
+                onChange={(e) => setFilters(p => ({ ...p, endDate: e.target.value }))}
+                className="h-10"
+              />
+            </div>
           </div>
+          {(filters.startDate || filters.endDate || filters.department !== 'All' || filters.status !== 'All' || filters.jobTitle !== 'All') && (
+            <div className="mt-4 flex justify-end">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setFilters({ department: 'All', status: 'All', jobTitle: 'All', startDate: '', endDate: '' })}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                Clear All Filters
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
 
