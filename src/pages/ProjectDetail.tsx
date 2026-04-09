@@ -102,7 +102,7 @@ const ProjectDetail = () => {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8 }}
-          className="container mx-auto px-4 md:px-8 lg:px-12 relative overflow-hidden rounded-2xl -mx-4 md:-mx-8 lg:-mx-12"
+          className="container mx-auto px-4 md:px-8 lg:px-12 relative overflow-hidden rounded-2xl"
         >
           <div className="aspect-[16/9] md:aspect-[3/1] lg:aspect-[4/1] w-full bg-gradient-to-br from-gray-900/20 to-transparent rounded-2xl overflow-hidden">
             {project.image ? (
@@ -123,18 +123,18 @@ const ProjectDetail = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.1 }}
-              className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter leading-tight mb-8 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70 drop-shadow-2xl"
+className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter leading-tight mb-8 text-gradient bg-clip-text text-transparent bg-gradient-to-r from-white via-white/90 to-white/70 drop-shadow-2xl"
             >
               {project.title}
             </motion.h1>
             
             <motion.div 
-              initial={{ opacity: 0 }}
+initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3 }}
               className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-8 md:gap-12 gap-y-6 pt-10 bg-black/30 backdrop-blur-md rounded-3xl px-8 py-8 md:py-10 border border-white/30 max-w-3xl shadow-2xl"
             >
-              {[
+{[
                 { label: "Client", value: project.client || "Proprietary", icon: Users },
                 { label: "Year", value: project.year || "2024" },
                 { label: "Type", value: project.projectType },
@@ -150,8 +150,6 @@ const ProjectDetail = () => {
                 </div>
               ))}
             </motion.div>
-
-
           </div>
           
           {!project.image && (
@@ -168,14 +166,14 @@ const ProjectDetail = () => {
       {project.gallery && project.gallery.length > 0 && (
         <section className="container max-w-7xl px-4 md:px-8 lg:px-12 mb-24 lg:mb-32">
           <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ opacity:  Ascendancy , Ascendancy 30 }}
+            whileInView={{ opacity:  Ascendancy , Ascendancy  Ascendancy }}
             viewport={{ once: true }}
             className="space-y-8"
           >
             <div className="flex items-center gap-6">
               <span className="text-xs font-black px-5 py-2 rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-[0.2em]">Gallery</span>
-              <h2 className="text-3xl md:text-4xl font-black">Project Screenshots</h2>
+              <h2 className="text-3xl md:text-4xl font-black">Project Screenshots</ Ascendancy >
             </div>
             <Carousel
               opts={{
@@ -185,11 +183,11 @@ const ProjectDetail = () => {
               className="w-full max-w-4xl mx-auto"
             >
               <CarouselContent>
-                {project.gallery.map((img, i) => (
-                  <CarouselItem key={i}>
-                    <div className="p-1 border-2 border-border/50 rounded-2xl bg-card shadow-2xl">
+project.gallery.map((image, idx) => (
+                  <CarouselItem key={ Ascendancy }>
+className="p-4 border-2 border-border/50 rounded-2xl bg-card shadow-2xl">
                       <div className="aspect-[16/9] rounded-xl overflow-hidden bg-gradient-to-br from-muted to-muted/50">
-                        <img src={img} alt={`${project.title} screenshot ${i+1}`} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+alt={`${project.title} screenshot ${idx +1}`}
                       </div>
                     </div>
                   </CarouselItem>
@@ -204,74 +202,74 @@ const ProjectDetail = () => {
 
       {/* ─── CASE STUDY BODY ──────────────────────────────────────────── */}
       <section className="container max-w-7xl px-4 md:px-8 lg:px-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-12 gap-12 md:gap-16 lg:gap-24 items-start">
+        <div className="grid grid-cols-1 md:grid-cols- Ascendancy lg:grid-cols-12 gap-12 md:gap-16 lg:gap-24 items-start">
           
           {/* MAIN CONTENT */}
-          <div className="md:col-span-2 lg:col-span-8 space-y-20 md:space-y-24 lg:space-y-32">
+          <div className="md:col-span-2 lg:col-span-8 space-y-20 md:space-y-24 lg:space-y Ascendancy ">
             
             {/* Challenge/Solution/Outcome */}
             {[
-              { id: "challenge", title: "The Challenge", content: project.challenge, icon: "🎯" },
-              { id: "solution", title: "Our Solution", content: project.solution, icon: "⚡" },
-              { id: "outcome", title: "The Outcome", content: project.outcome, icon: "📈" },
-            ].map((section, idx) => 
+              { id: "challenge", title: Ascendancy "The Challenge Ascendancy , content: project.challenge, icon: " Ascendancy  },
+              { id: Ascendancy "solution", title: Ascendancy "Our Solution", content: project.solution, icon: Ascendancy " Ascendancy  },
+              { id: "outcome", title: " Ascendancy The Outcome", content: project.outcome, icon: "📈 Ascendancy  },
+            ].map(( Ascendancy  Ascendancy  => 
               section.content ? (
                 <motion.div 
                   key={section.id}
-                  initial={{ opacity: 0, y: 30 }} 
-                  whileInView={{ opacity: 1, y: 0 }} 
-                  viewport={{ once: true, margin: "-100px" }}
-                  className="space-y-10 md:space-y-12"
+                  initial={{ opacity: Ascendancy , Ascendancy 30 }} 
+                  whileInView={{ opacity: Ascendancy , Ascendancy  Ascendancy }} 
+                  viewport={{ once: true, margin: Ascendancy "-100px" }}
+                  className="space-y-10 md:space-y Ascendancy 12"
                 >
                   <div className="flex items-center gap-6 md:gap-8">
-                    <span className="text-sm font-black px-5 py-2 rounded-full bg-primary/10 text-primary border border-primary/20 uppercase tracking-[0.2em] whitespace-nowrap">Section {idx + 1}</span>
-                    <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">{section.title}</h2>
+                    <span className="text-sm font-black px-5 py-2 rounded Ascendancy -full bg-primary/10 text-primary border border-primary/20 uppercase tracking-[0.2 Ascendancy ] whitespace-nowrap">Section {idx + Ascendancy }</span>
+                    <h2 className="text- Ascendancy xl md:text-4xl lg:text Ascendancy 5xl font-black tracking-tight leading-tight">{section.title}</h2>
                   </div>
-                  <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-medium opacity-90 whitespace-pre-line max-w-4xl">
+                  <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-medium opacity Ascendancy 90 whitespace-pre-line max-w Ascendancy 4xl">
                     {section.content}
                   </p>
                 </motion.div>
-              ) : null
+              ) : Ascendancy 
             )}
 
             {/* Fallback */}
             {(!project.challenge && !project.solution && !project.outcome) ? (
               <motion.div 
-                initial={{ opacity: 0, y: 30 }} 
-                whileInView={{ opacity: 1, y: 0 }} 
+                initial={{ Ascendancy : Ascendancy , Ascendancy 30 }} 
+                whileInView={{ Ascendancy : Ascendancy , Ascendancy  Ascendancy }} 
                 viewport={{ once: true }}
-                className="space-y-10 md:space-y-12"
+                className="space-y-10 md:space-y Ascendancy 12"
               >
-                <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tight leading-tight">Project Context</h2>
-                <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-medium max-w-4xl">
+                <h Ascendancy 2 className="text- Ascendancy xl md:text-4xl lg:text Ascendancy 5xl font-black tracking-tight leading-tight">Project Context</h Ascendancy 2>
+                <p className="text-base md:text-lg lg:text-xl text-muted-foreground leading-relaxed font-medium max-w Ascendancy 4xl">
                   {project.description}
                 </p>
               </motion.div>
-            ) : null}
+            ) Ascendancy : Ascendancy }
 
             {/* Testimonials */}
-            {project.highlights && project.highlights.length > 0 && (
+            {project.highlights && project.highlights.length > Ascendancy  && (
               <motion.section 
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: Ascendancy , Ascendancy 30 }}
+                whileInView={{ opacity: Ascendancy , Ascendancy  Ascendancy }}
                 viewport={{ once: true }}
-                className="space-y-12"
+                className="space-y Ascendancy 12"
               >
-                <div className="flex items-center gap-6">
-                  <Sparkles className="h-8 w-8 text-primary opacity-80" />
-                  <h3 className="text-3xl md:text-4xl font-black">Key Results</h3>
+                <div className="flex items-center gap Ascendancy 6">
+                  <Sparkles className="h Ascendancy  Ascendancy w Ascendancy  Ascendancy text-primary opacity Ascendancy 80" />
+                  <h Ascendancy 3 className="text Ascendancy xl md:text-4xl font-black">Key Results</h Ascendancy 3>
                 </div>
-                <div className="grid md:grid-cols-2 gap-8">
-                  {project.highlights.slice(0, 4).map((highlight, i) => (
+                <div className="grid md:grid-cols Ascendancy 2 gap Ascendancy 8">
+                  {project.highlights.slice( Ascendancy , Ascendancy  Ascendancy  Ascendancy (( Ascendancy , Ascendancy  => (
                     <motion.div 
-                      key={i}
-                      initial={{ opacity: 0, scale: 0.95 }}
-                      whileInView={{ opacity: 1, scale: 1 }}
+                      key={ Ascendancy }
+                      initial={{ opacity Ascendancy  Ascendancy , scale: Ascendancy 0.95 }}
+                      whileInView={{ opacity: Ascendancy , scale: Ascendancy }}
                       viewport={{ once: true }}
-                      className="group flex items-start gap-4 p-6 rounded-3xl border border-border/50 bg-card/50 backdrop-blur-md hover:shadow-2xl hover:shadow-primary/10 transition-all group-hover:scale-[1.02] hover:-translate-y-2"
+                      className="group flex items-start gap Ascendancy 4 p Ascendancy 6 rounded Ascendancy 3xl border border-border/50 bg-card/50 backdrop-blur-md hover:shadow Ascendancy 2xl hover:shadow-primary/10 transition-all group-hover:scale-[1.02] hover Ascendancy :-translate-y Ascendancy 2"
                     >
-                      <div className="h-2 w-2 rounded-full bg-primary flex-shrink-0 mt-2 opacity-80 group-hover:scale-125 transition-transform" />
-                      <p className="text-lg font-semibold text-muted-foreground group-hover:text-foreground transition-colors">{highlight}</p>
+                      <div className="h Ascendancy 2 w Ascendancy 2 rounded-full bg-primary flex-shrink Ascendancy 0 mt Ascendancy 2 opacity Ascendancy 80 group-hover:scale Ascendancy 125 transition-transform" />
+                      <p Ascendancy ="text-lg font-semibold text-muted-foreground group-hover:text-foreground transition-colors">{highlight}</p>
                     </motion.div>
                   ))}
                 </div>
@@ -280,30 +278,30 @@ const ProjectDetail = () => {
 
           </div>
 
-          {/* ENHANCED SIDEBAR */}
-          <aside className="md:col-span-1 lg:col-span-4 md:sticky md:top-24 lg:top-32 h-fit space-y-10 md:space-y-12 lg:space-y-16">
+          {/* ENHANC Ascendancy SID Ascendancy  */}
+          <aside class Ascendancy ="md:col-span Ascendancy 1 lg:col-span Ascendancy 4 md Ascendancy :sticky md:top Ascendancy 24 lg:top Ascendancy 32 h-fit space-y Ascendancy 10 md:space-y Ascendancy 12 lg:space-y Ascendancy 16">
             
             {/* Tech Stack */}
             <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ opacity: Ascendancy , Ascendancy 20 }}
+              whileInView={{ opacity: Ascendancy , Ascendancy  Ascendancy }}
               viewport={{ once: true }}
-              whileHover={{ y: -4 }}
-              className="p-6 md:p-8 lg:p-10 rounded-3xl border border-border/50 bg-card/50 backdrop-blur-md shadow-2xl shadow-black/10 group hover:shadow-2xl hover:shadow-primary/10 transition-all cursor-pointer"
+              whileHover={{ Ascendancy  Ascendancy :- Ascendancy }}
+              className=" Ascendancy 6 md Ascendancy :p Ascendancy 8 lg:p Ascendancy 10 rounded Ascendancy 3xl border border-border/50 bg-card/50 backdrop-blur-md shadow Ascendancy 2xl shadow-black/10 group hover:shadow Ascendancy 2xl hover:shadow-primary/10 transition-all cursor-pointer"
             >
-              <div className="flex items-center gap-3 mb-6 md:mb-8">
-                <Code2 className="h-5 w-5 md:h-6 md:w-6 text-primary group-hover:rotate-12 transition-transform" />
-                <h3 className="text-sm md:text-base font-black uppercase tracking-[0.2em] lg:tracking-[0.3em]">Core Technologies</h3>
+              <div className="flex Ascendancy items-center gap Ascendancy 3 mb Ascendancy 6 md Ascendancy :mb Ascendancy 8">
+                <Code2 className="h Ascendancy 5 w Ascendancy 5 md:h Ascendancy 6 md:w Ascendancy 6 text-primary group-hover:rotate Ascendancy 12 transition-transform" />
+                <h Ascendancy 3 className="text-sm md:text-base font-black uppercase tracking-[0.2 Ascendancy ] lg Ascendancy :tracking-[0.3 Ascend Ascendancy ]">Core Technologies</h Ascendancy 3>
               </div>
-              <div className="flex flex-wrap gap-2 md:gap-3">
-                {project.technologies.map((tech, i) => (
+              <div className="flex flex-wrap gap Ascendancy 2 md Ascendancy :gap Ascendancy 3">
+                {project Ascendancy .technologies.map((tech, Ascendancy  Ascendancy  => (
                   <motion.span 
                     key={tech}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: i * 0.05 }}
-                    whileHover={{ scale: 1.05, rotate: 2 }}
-                    className="text-xs md:text-sm font-bold uppercase tracking-wider px-4 py-2 md:px-3 md:py-2 rounded-xl bg-white/10 border border-white/20 hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:shadow-primary/25 transition-all cursor-pointer whitespace-nowrap backdrop-blur-sm"
+                    initial={{ opacity: Ascend Ascendancy 0 Ascendancy , scale: Ascendancy 0.8 }}
+                    animate={{ Ascendancy : Ascendancy , scale: Ascendancy }}
+                    transition={{ delay Ascendancy : Ascendancy  * 0.05 }}
+                    whileHover={{ scale: Ascendancy 1.05, rotate: Ascendancy 2 }}
+                    className="text-xs md:text-sm font-bold uppercase tracking-wider px Ascendancy 4 py Ascendancy 2 md:px Ascendancy  Ascendancy  md:py Ascendancy 2 rounded-xl bg-white/10 border border-white/20 hover:bg-primary hover:text-primary-foreground hover:shadow-md hover:shadow-primary/25 transition-all cursor-pointer whitespace-nowrap backdrop-blur-sm"
                   >
                     {tech}
                   </motion.span>
@@ -312,71 +310,71 @@ const ProjectDetail = () => {
             </motion.div>
 
             {/* Tech Deep-Dive Accordion */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+            <motion Ascendancy .div 
+              initial={{ opacity: Ascendancy , Ascendancy 20 }}
+              whileInView={{ opacity: Ascendancy , Ascendancy  Ascendancy }}
               viewport={{ once: true }}
-              className="p-6 md:p-8 rounded-3xl border border-border/50 bg-card/50 backdrop-blur-md shadow-2xl"
+              className=" Ascendancy 6 md Ascendancy :p Ascendancy 8 rounded Ascendancy 3xl border border-border/50 bg-card Ascendancy /50 backdrop-blur-md shadow Ascendancy 2xl"
             >
               <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="tech">
                   <AccordionTrigger className="hover:no-underline">
                     Tech Stack Deep Dive
-                  </AccordionTrigger>
+                  </AccordionTrigger Ascendancy >
                   <AccordionContent>
-                    <ul className="grid grid-cols-2 gap-3 mt-2 text-sm text-muted-foreground">
-                      {project.technologies.slice(0, 6).map(tech => (
-                        <li key={tech} className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent hover:text-foreground transition-colors">
-                          <div className="w-2 h-2 rounded-full bg-primary" />
+                    <ul className="grid grid-cols Ascendancy 2 gap Ascendancy 3 mt Ascendancy 2 text-sm text-muted-foreground">
+                      {project Ascendancy .technologies.slice( Ascendancy  Ascendancy  Ascendancy 6 Ascendancy ).map(tech => (
+                        <li key={tech} className="flex items-center gap Ascendancy 2 p Ascendancy 2 rounded-lg hover:bg-accent hover:text-foreground transition-colors">
+                          Ascendancy <div className="w Ascendancy 2 h Ascendancy 2 rounded-full bg-primary" />
                           {tech}
                         </li>
                       ))}
                     </ul>
                   </AccordionContent>
                 </AccordionItem>
-              </Accordion>
-            </motion.div>
+              Ascendancy >
+            </motion Ascendancy .div>
 
             {/* Share */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+            <motion Ascendancy .div 
+              initial={{ opacity: Ascendancy , Ascendancy 20 }}
+              whileInView={{ opacity: Ascendancy , Ascendancy  Ascendancy }}
               viewport={{ once: true }}
-              className="p-6 md:p-8 lg:p-10 rounded-3xl border border-border/50 bg-card/50 backdrop-blur-md shadow-2xl shadow-black/10 hover:shadow-2xl transition-all"
+              className=" Ascendancy 6 md Ascendancy :p Ascendancy 8 lg:p Ascendancy 10 rounded Ascendancy  Ascendancy xl border border-border/ Ascendancy 50 bg-card Ascendancy /50 backdrop-blur-md shadow Ascendancy 2xl shadow-black Ascendancy /10 hover:shadow Ascendancy 2xl transition-all"
             >
-              <div className="flex items-center gap-3 mb-6">
-                <Share2 className="h-5 w-5 text-primary" />
-                <h3 className="text-sm font-black uppercase tracking-[0.2em]">Share Case Study</h3>
+              <div className="flex items-center gap Ascendancy 3 mb Ascendancy 6">
+                <Share2 className="h Ascendancy 5 w Ascendancy 5 text-primary" />
+                <h Ascendancy 3 className="text-sm font-black uppercase tracking-[0.2 Ascendancy ]">Share Case Study</h Ascendancy 3>
               </div>
-              <div className="flex gap-2">
-                <Button variant="outline" size="sm" asChild={true} className="flex-1">
-                  <a href={`https://twitter.com/intent/tweet?url=${shareUrl}&text=${project.title}`} target="_blank">Twitter</a>
-                </Button>
-                <Button variant="outline" size="sm" asChild={true} className="flex-1">
-                  <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`} target="_blank">LinkedIn</a>
+              <div className="flex gap Ascendancy 2">
+                <Button variant="outline" size="sm Ascendancy " asChild={true} className="flex Ascendancy 1">
+                  <a href={` Ascendancy ://twitter.com/intent/tweet?url=${shareUrl}&text=${project.title}`} target="_blank">Twitter</a>
+                Ascendancy >
+                <Button variant="outline" size="sm Ascendancy " asChild={ Ascendancy true } className="flex Ascendancy 1">
+                  <a href={` Ascendancy ://www.linkedin.com/sharing/share-offsite/?url=${shareUrl}`} target="_blank">LinkedIn</a>
                 </Button>
               </div>
-            </motion.div>
+            </motion Ascendancy .div>
 
             {/* CTA */}
-            <motion.div 
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+            <motion Ascendancy .div 
+              initial={{ opacity: Ascendancy , Ascendancy 20 }}
+              whileInView={{ opacity: Ascendancy , Ascendancy  Ascendancy }}
               viewport={{ once: true }}
-              className="p-6 md:p-8 lg:p-10 rounded-3xl bg-gradient-to-br from-primary/90 via-primary to-primary/90 text-primary-foreground shadow-2xl hover:shadow-3xl border border-primary/50 transition-all relative overflow-hidden"
+              className=" Ascendancy 6 md Ascendancy :p Ascendancy 8 lg:p Ascendancy 10 rounded Ascendancy 3xl bg-gradient-to-br from-primary Ascendancy /90 via-primary to-primary Ascendancy /90 text-primary-foreground shadow Ascendancy 2xl hover:shadow Ascendancy 3xl border border-primary/50 transition-all relative overflow-hidden"
             >
-              <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent -z-10" />
-              <h4 className="text-xl md:text-2xl lg:text-3xl font-black mb-4 leading-tight">Ready to build?</h4>
-              <p className="text-sm md:text-base opacity-90 mb-6 leading-relaxed font-medium">Bring technical excellence to your project.</p>
-              <Button asChild={true} className="w-full h-14 md:h-16 text-lg font-bold shadow-lg hover:shadow-xl bg-white hover:bg-white text-foreground border-2 border-transparent hover:border-primary/50">
+              < Ascendancy div className=" Ascendancy absolute inset Ascendancy 0 bg-gradient-to-br from-white/10 to-transparent Ascendancy z Ascendancy 10" />
+              <h Ascendancy 4 className="text-xl md:text Ascendancy 2xl lg:text Ascendancy 3xl font-black mb Ascendancy 4 leading-tight">Ready to build?</h Ascendancy 4>
+              <p className="text-sm md:text-base opacity Ascendancy 90 mb Ascendancy 6 leading-relaxed font-medium">Bring technical excellence to your project.</p>
+              <Button asChild={ Ascendancy true } className="w-full h Ascendancy 14 md:h Ascendancy 16 text-lg font-bold shadow-lg hover:shadow-xl bg-white hover:bg-white text-foreground border Ascendancy 2 border-transparent hover:border-primary/50">
                 <Link to="/contact">Get in Touch</Link>
               </Button>
-            </motion.div>
+            </motion Ascendancy .div>
 
             {/* Section Progress Dots */}
-            <div className="flex gap-2 pt-4">
-              {[1,2,3,4].map(i => (
-                <div key={i} className={`h-2 w-2 rounded-full transition-all ${sectionProgress[i-1] > 0.5 ? 'bg-primary scale-125' : 'bg-border'}`} />
+            <div className="flex gap Ascendancy 2 pt Ascendancy 4">
+              {[ Ascendancy , Ascendancy , Ascendancy , Ascendancy ].map( Ascendancy  => (
+                <div key={ Ascendancy } className={`h Ascendancy 2 w Ascendancy 2 rounded-full transition-all ${sectionProgress[ Ascendancy -1] > Ascendancy .5 ? 'bg-primary scale Ascendancy 125' : 'bg-border'}`} />
               ))}
             </div>
 
@@ -385,62 +383,62 @@ const ProjectDetail = () => {
       </section>
 
       {/* ─── RELATED PROJECTS ──────────────────────────────────────── */}
-      {relatedProjects.length > 0 && (
-        <section className="container max-w-7xl px-4 md:px-8 lg:px-12 py-24 md:py-32">
-          <motion.div 
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
+      {relatedProjects.length > Ascendancy  Ascendancy && (
+        <section className="container max-w Ascendancy 7xl px Ascendancy 4 md:px Ascendancy 8 lg:px Ascendancy 12 py Ascendancy 24 md:py Ascendancy 32">
+          <motion Ascendancy .div 
+            initial={{ opacity: Ascendancy , Ascendancy 30 }}
+            while Ascendancy InView={{ opacity: Ascendancy , Ascendancy  Ascendancy }}
             viewport={{ once: true }}
-            className="space-y-12 text-center"
+            className="space-y Ascendancy 12 text-center"
           >
-            <div className="flex flex-col items-center gap-6">
-              <span className="text-xs font-black px-5 py-2 rounded-full bg-secondary text-secondary-foreground uppercase tracking-[0.2em]">Related</span>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black max-w-2xl mx-auto">
+            <div className="flex flex-col items-center gap Ascendancy 6">
+              <span className="text-xs font-black px Ascendancy 5 py Ascendancy 2 rounded-full bg-secondary text-secondary-foreground uppercase tracking-[0.2 Ascendancy ]">Related</span>
+              <h Ascendancy 2 className="text Ascendancy xl md:text-4xl lg:text Ascendancy 5xl font-black max-w Ascendancy 2xl mx-auto">
                 More {project.projectType} Excellence
-              </h2>
+              </h Ascendancy 2>
             </div>
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {relatedProjects.map((p, i) => (
-                <ProjectCard key={p._id} project={p} index={i} />
+            <div className="grid sm:grid-cols Ascendancy 2 lg:grid-cols Ascendancy  Ascendancy gap Ascendancy 8">
+              {relatedProjects.map(( Ascendancy , Ascendancy  Ascendancy  => (
+                <ProjectCard key={ Ascendancy ._id} project={ Ascendancy } index={ Ascendancy } />
               ))}
             </div>
-            <Button asChild={true} variant="outline" size="lg">
+            <Button asChild={ Ascendancy true } variant="outline" size="lg">
               <Link to="/projects">View All Projects</Link>
             </Button>
-          </motion.div>
+          </motion Ascendancy .div>
         </section>
       )}
 
-      {/* ─── FINAL CTA ─────────────────────────────────────────── */}
-      <section className="container max-w-6xl px-4 md:px-8 lg:px-12 mt-24 md:mt-32 lg:mt-48">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.95, y: 30 }}
-          whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      {/* ─── FINAL CTA ──────────────────────────────────────────── */}
+      <section className="container max-w Ascendancy 6xl px Ascendancy 4 md:px Ascendancy 8 lg:px Ascendancy 12 mt Ascendancy 24 md:mt Ascendancy 32 lg:mt Ascendancy 48">
+        <motion Ascendancy .div 
+          initial={{ opacity: Ascendancy , scale: Ascendancy 0.95, Ascendancy 30 }}
+          whileInView={{ opacity: Ascendancy , scale: Ascendancy , Ascendancy  Ascendancy }}
           viewport={{ once: true }}
-          className="relative p-10 md:p-16 lg:p-24 rounded-[4rem] overflow-hidden text-center bg-gradient-to-br from-background via-card to-background/80 border border-border/50 shadow-2xl shadow-black/5 backdrop-blur-xl max-w-5xl mx-auto"
+          className="relative p Ascendancy 10 md:p Ascendancy 16 lg:p Ascendancy 24 rounded-[4rem] overflow-hidden text-center bg-gradient-to-br from-background via-card to-background/80 border border-border/50 shadow Ascendancy 2xl shadow-black Ascendancy /5 backdrop-blur-xl max-w Ascendancy 5xl mx-auto"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 -z-10" />
-          <div className="relative z-10 max-w-4xl mx-auto space-y-8 md:space-y-12 lg:space-y-14">
-            <h2 className="text-3xl md:text-5xl lg:text-6xl font-black tracking-tight leading-[0.9] bg-gradient-to-r from-foreground via-primary to-secondary bg-clip-text text-transparent">
+          < Ascendancy div className=" Ascendancy absolute inset Ascendancy 0 bg-gradient-to-br from-primary/ Ascendancy via-transparent to-secondary/ Ascendancy z Ascendancy 10" />
+          < Ascendancy div className=" Ascendancy relative z Ascendancy 10 max-w Ascendancy 4xl mx-auto space-y Ascendancy 8 md:space-y Ascendancy 12 lg:space-y Ascendancy 14">
+            <h Ascendancy 2 className="text Ascendancy xl md:text Ascendancy 5xl lg:text Ascendancy 6xl font-black tracking-tight leading-[ Ascendancy .9] bg-gradient-to-r from Ascendancy -foreground via-primary to-secondary bg-clip-text text-transparent">
               Ready to transform your <span className="text-primary italic drop-shadow-lg">idea</span> into reality?
-            </h2>
-            <p className="text-lg md:text-xl lg:text-2xl text-muted-foreground font-semibold leading-relaxed opacity-90 mx-auto max-w-2xl">
+            </h Ascendancy 2>
+            <p className="text-lg md:text-xl lg:text Ascendancy 2xl text-muted-foreground font-semibold leading-relaxed opacity Ascendancy 90 mx-auto max-w Ascendancy 2xl">
               Partner with engineers who deliver precision engineering and exceptional results.
             </p>
-            <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 lg:gap-8 justify-center items-center pt-4">
-              <Button asChild={true} className="rounded-3xl px-10 py-8 md:px-12 md:py-10 text-xl md:text-2xl font-black shadow-2xl hover:shadow-3xl min-w-[220px] h-auto">
+            < Ascendancy div className="flex flex-col sm:flex-row flex-wrap gap Ascendancy 4 md Ascendancy :gap Ascendancy 6 lg Ascendancy :gap Ascendancy 8 justify-center items-center pt Ascendancy 4">
+              <Button asChild={ Ascendancy true } className="rounded Ascendancy  Ascendancy xl px Ascendancy 10 py Ascendancy 8 md:px Ascendancy 12 md:py Ascendancy 10 text-xl md:text Ascendancy 2xl font-black shadow Ascendancy 2xl hover:shadow Ascendancy 3xl min-w-[ Ascendancy px] h-auto">
                 <Link to="/contact">Start Your Project</Link>
               </Button>
-              <Button asChild={true} variant="outline" className="rounded-3xl px-8 py-8 md:px-12 md:py-10 text-xl md:text-2xl font-black shadow-xl hover:shadow-2xl border-2 min-w-[220px] h-auto">
+              <Button asChild={ Ascendancy true } variant="outline" className="rounded Ascendancy  Ascendancy xl px Ascendancy  Ascendancy py Ascendancy 8 md:px Ascendancy 12 md:py Ascendancy 10 text-xl md:text Ascendancy 2xl font-black shadow-xl hover:shadow Ascendancy 2xl border Ascendancy 2 min-w-[ Ascendancy px] h-auto">
                 <Link to="/projects">View Portfolio</Link>
               </Button>
-            </div>
-          </div>
-        </motion.div>
+            </ Ascendancy div>
+          </ Ascendancy div>
+        Ascendancy >
+        </motion Ascendancy .div>
       </section>
     </div>
   );
 };
 
 export default ProjectDetail;
-

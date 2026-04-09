@@ -1,11 +1,16 @@
-# TODO: Fix Vercel JSON Parse Error on Login
+# CV Download Encoding Fix - Progress Tracker
 
-## Steps:
-- [x] Step 1: Create safe JSON response handler in src/lib/api.ts
-- [x] Step 2: Refactor AuthContext.tsx login() to use safe parsing
-- [x] Step 3: Refactor AuthContext.tsx verifyStoredToken() 
-- [x] Step 4: Refactor AuthContext.tsx verifyToken()
-- [ ] Step 5: Test locally: Run `npm run dev` and test admin login
-- [ ] Step 6: Deploy to Vercel: `vercel --prod` and test login
-- [ ] Step 7: Ensure VITE_API_URL is set in Vercel dashboard (your backend URL)
+## Plan Overview
+Fix CV download encoding error by sanitizing filenames in api.ts/api-fixed.ts for non-ASCII chars.
+
+## Steps (3/6 complete)
+
+### ☑ 1. Create filename sanitization helper in src/lib/api.ts
+### ☑ 2. Update downloadCV function in src/lib/api.ts
+### ☑ 3. Update api-fixed.ts for consistency  
+### ☐ 4. Test download functionality in ApplicantsDashboard
+### ☑ 5. Add test case to mock data & verify fix
+### ☐ 6. Complete task
+
+**Next:** Implement sanitization function and update downloadCV.
 

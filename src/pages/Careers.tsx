@@ -77,13 +77,25 @@ const Careers = () => {
   const handlePositionChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const jobId = e.target.value;
     setSelectedRole(jobId);
+    
+    if (jobId === "other") {
+      setFormData(prev => ({ 
+        ...prev, 
+        position: "General Application",
+        jobId: "other",
+        city: prev.city || "",
+        district: prev.district || ""
+      }));
+      return;
+    }
+
     const job = openings.find(j => j._id === jobId);
     setFormData(prev => ({ 
       ...prev, 
       position: job?.title || "",
       jobId: job?._id || "",
-      city: job?.city || "",
-      district: job?.district || ""
+      city: job?.city || prev.city,
+      district: job?.district || prev.district
     }));
   };
 

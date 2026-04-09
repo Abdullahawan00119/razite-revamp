@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { safeJson } from '@/lib/api.ts';
+import api from '@/lib/api';
 
 interface Admin {
   id: string;
@@ -42,24 +42,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const verifyStoredToken = async (token: string) => {
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/verify-token`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      if (response.ok) {
-        const data = await safeJson(response);
-        if (data.success) {
-          setAdmin(data.admin);
-        }
+      const data = await api.authAPI.verifyToken(token);
+      if (data.success) {
+        setAdmin(data.admin);
       } else {
-        // Token is invalid, remove it
         localStorage.removeItem(STORAGE_KEY);
         setToken(null);
       }
@@ -73,22 +59,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   };
 
   const login = async (email: string, password: string) => {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/auth/login`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ email, password })
-      }
-    );
-
-    const data = await safeJson(response);
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.message || 'Login failed');
-    }
+    const data = await api.authAPI.login(email, password);
 
     const newToken = data.token;
     setToken(newToken);
@@ -106,23 +77,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     if (!token) return false;
 
     try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/auth/verify-token`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        }
-      );
-
-      if (response.ok) {
-        const data = await safeJson(response);
-        return data.success;
-      }
-
-      return false;
+      const data = await api.authAPI.verifyToken(token);
+      return data.success;
     } catch (error) {
       console.error('Token verification error:', error);
       return false;
@@ -141,3 +97,4 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
+

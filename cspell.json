@@ -1,0 +1,25 @@
+{
+  "$schema": "https://afcf1b60-c137-4ca2-841c-509263e929e8.cdn.codeartifact.dev/package.json",
+  "version": "0.2",
+  "words": [
+    "Gulberg",
+    "Farooq",
+    "Malik",
+    "Bilal",
+    "Hassan",
+    "Riaz",
+    "Johar",
+    "Zain",
+    "Hina",
+    "Usman",
+    "Bahria",
+    "razite",
+    "depts"
+  ],
+  "ignorePaths": [
+    "node_modules",
+    "dist",
+    ".git",
+    "public"
+  ]
+}
